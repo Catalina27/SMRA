@@ -1,0 +1,56 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+<section class="content">
+		<div class="row clearfix">
+    		<div class="col-lg-14 col-md-14 col-sm-14 col-xs-14">
+        		<div class="card">
+
+                    <div class="header">
+                        <h2>
+                                CONTENIDO
+                                <small>Contenido registrado en el sistema</small>
+                        </h2>
+                    </div>
+
+					<div class="body">
+    					<ol class="breadcrumb breadcrumb-bg-pink">
+       						<li><a href="javascript:void(0);"><i class="material-icons">home</i> Home</a></li>
+       						<li class="active"><i class="material-icons">build</i> Mantenedores</li>
+       						<li class="active"><i class="material-icons">library_books</i> Contenido</li>
+    					</ol>
+					</div>
+
+					<div class="body table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>N°</th>
+                                        <th>Contenido</th>
+                                        <th>Tipo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                	{% if contenido %}
+                                	{% for contenido in contenido %}
+                                    <tr>
+                                        <th scope="row">{{contenido.id}}</th>
+                                        <td>{{contenido.nombre}}</td>
+                                        <td>{{contenido.tipo.nombre}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    {% else %}
+                                    <center><h5><b>¡No hay registros de Contenidos en el Sistema! ¡Agrega uno! </b></h5></center>
+                                    <center><a href="" type="button" class="btn btn-success btn-circle waves-effect waves-circle waves-float"><i class="material-icons">add</i></a></center>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+
+				</div>
+			</div>
+		</div>
+</section>
+
+{% endblock %}

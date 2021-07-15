@@ -1,0 +1,99 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load staticfiles %}
+{% block content %}
+
+<section class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <h2>SISTEMA DE MEDICIÓN DE RESULTADOS DE APRENDIZAJE</h2><br><br>
+            </div>
+            <!-- Body Copy -->
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header bg-green">
+                            <h2>
+                                Bienvenid@! 
+                                            
+                            </h2>
+                        </div>
+                        <div class="body">
+                            <p class="lead">
+                                SMRA tiene como objetivo diseñar y elaborar rúbricas de evaluación que beneficien los métodos de enseñanza de los docentes de Unidades Académicas de la PUCV y otras universidades chilenas.
+                            </p>
+                            <p>
+                               Este proyecto nace a raíz de las necesidades observadas en los cursos de Taller de Ingeniería de Software (impartidos en Ingeniería de Ejecución Informática e Ingeniería Civil Informática) de la <b>Pontificia Universidad Católica de Valparaíso</b> en donde la dinámica semestral es modelar, diseñar e implementar un sistema informático. Ambos cursos presentan como instrumento de evaluación una lista de cotejo que actúa durante todo el proceso de este desarrollo, desde la presentación de tema, avance y en la parte Final, dificultando los beneficios para los estudiantes tanto como para los docentes.
+                                En base a lo anterior, para que se cumpla el logro de aprendizaje significativo y de calidad, se necesitan implementar instrumentos de evaluación que beneficien la retroalimentación con los estudiantes para fomentar la autorregulación de los desempeños, obtener retroalimentación de calidad por parte del alumnado y determinar hacia dónde y de qué forma el alumno debe apuntar para guiar su desempeño hacia sus logros.
+
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Unordered List -->
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <h2>
+                                APARTADOS DEL SISTEMA
+                                <small>¡Comienza a crear!</small>
+                            </h2>
+                        </div>
+                        <div class="body">
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <!-- Nav tabs -->
+                                    <ul class="nav nav-tabs tab-nav-right" role="tablist">
+                                        <li role="presentation"><a href="#profile_animation_2" data-toggle="tab">CREA UNA RÚBRICA</a></li>
+                                        <li role="presentation"><a href="#messages_animation_2" data-toggle="tab">HISTÓRICAS</a></li>
+                                        <li role="presentation"><a href="#settings_animation_2" data-toggle="tab">RESULTADOS DE APRENDIZAJE</a></li>
+                                        <li role="presentation"><a href="#estadisticas_animation_2" data-toggle="tab">ESTADÍSTICAS</a></li>
+                                    </ul>
+
+                                    <!-- Tab panes -->
+                                    <div class="tab-content">
+                                        <div role="tabpanel" class="tab-pane animated fadeInRight" id="profile_animation_2">
+                                            <b>Crea una Rúbrica</b>
+                                            <p>
+                                                En este apartado puedes crear una rúbrica de evaluación. Debes elegir la Universidad en la que impartes tus cursos para encontrar rúbricas de tu área. 
+                                                ¡Comienza a crear una rúbrica!
+                                            </p>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane animated fadeInRight" id="messages_animation_2">
+                                            <b>Históricas</b>
+                                            <p>
+                                                En este apartado encontrarás un repositorio en dónde estarán todas las rúbricas elaboradas en este sistema.
+                                            </p>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane animated fadeInRight" id="settings_animation_2">
+                                            <b>Resultados de Aprendizaje</b>
+                                            <p>
+                                                En este apartado encontrarás una pequeña guía sobre los resultados de aprendizaje, cómo redactarlos y la importancia que tiene incorporarlos en las actividades de evaluación de un curso.
+                                            </p>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane animated fadeInRight" id="estadisticas_animation_2">
+                                            <b>Estadísticas</b>
+                                            <p>
+                                                En este apartado encontrarás un pequeño resumen de las rúbricas elaboradas.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- #END# Unordered List -->
+            <div class="body">
+                <center><img src="{% static 'images/pucv.png' %}"></center>
+            </div>
+        </div>
+</section>
+
+
+
+
+{% endblock %}
