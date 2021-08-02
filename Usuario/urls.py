@@ -19,5 +19,8 @@ urlpatterns = [
 
     #-----REGISTRO-----
     path('sign-up/', views.register, name='sign-up'),
+    path('carga-manual/alumnos', views.cargaManualAlumno, name='agregarAlumnoManual'),
+    path('alumnos/editar-alumno/<slug:pk>', views.editarAlumno, name='editarAlumno'),
+
 
 ]

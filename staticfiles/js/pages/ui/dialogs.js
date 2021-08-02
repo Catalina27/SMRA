@@ -83,8 +83,8 @@ function showCancelMessage() {
 
 function showWithCustomIconMessage() {
     swal({
-        title: "Sweet!",
-        text: "Here's a custom image.",
+        title: "Excelente!",
+        text: "Se han realizado las modificaciones correctamente",
         imageUrl: "../../images/thumbs-up.png"
     });
 }

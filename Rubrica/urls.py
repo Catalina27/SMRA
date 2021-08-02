@@ -18,9 +18,7 @@ from django.conf.urls.static import static
 urlpatterns = [
 
     #-----RÚBRICA-----
-    path('cursos/docente', views.misCursos, name="misCursos"),
-    path('cursos/docente/agregar-curso', views.agregarCurso, name="agregarCurso"),
-    path('cursos/docente/asignatura/<int:pk>', views.agregarAsignatura, name="agregarAsignatura"),
-    path('cursos/docente/detalle-asignatura/<int:pk>', views.detalleAsignatura, name="detalleAsignatura"),
+    path('new/rubrica', views.crearRubrica, name="crearRubrica"),
+    path('cursos/docente/rubricas', views.misRubricas, name="misRubricas"),
 
 ]

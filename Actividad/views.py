@@ -50,10 +50,14 @@ from datetime import date
 from datetime import datetime
 
 from .models import Contenido
+from Usuario.models import Persona
 # Create your views here.
 
 def index(request):
-	return render (request, 'base/index.html')
+	current_user = request.user
+	usuario = Persona.objects.get(user=current_user.id)
+	tipo_usuario = usuario.tipo_usuario
+	return render (request, 'base/index.html',{'usuario':usuario})
 
 
 @login_required()

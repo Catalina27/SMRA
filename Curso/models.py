@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser, User
 from Carrera.models import Carrera
 from Usuario.models import Alumno
 from Rubrica.models import Rubrica
@@ -9,6 +10,7 @@ from Rubrica.models import Rubrica
 class Curso(models.Model):
 	nombre = models.CharField(max_length=100, null=False, blank=False)
 	sigla = models.CharField(max_length=10, null=True, blank=True)
+	autor = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
 	carrera = models.ForeignKey(Carrera, null=True, blank=True, on_delete=models.CASCADE)
 
 	def __str__(self):
@@ -16,7 +18,7 @@ class Curso(models.Model):
 
 
 class Asignatura(models.Model):
-	curso = models.ForeignKey(Curso, null=False, blank=False, on_delete=models.CASCADE)
+	curso = models.ForeignKey(Curso, null=True, blank=True, on_delete=models.CASCADE)
 	primer = '1'
 	segundo = '2'
 	semestre_options = (

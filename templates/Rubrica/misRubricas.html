@@ -1,0 +1,132 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+                                             
+<body class="theme-amber">
+<section class="content">
+		<div class="row clearfix">
+    		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        		<div class="card">
+
+                    <div class="header">
+                        <h2><center><b>
+                                MIS RÚBRICAS
+                                <small>Rúbricas registradas en el sistema</small>
+                        </h2></center></b>
+                    </div>
+
+					<div class="body">
+            			<div class="row clearfix">
+                			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    			<div class="card">
+                        			<div class="header">
+                            			<h2><b>
+                                			RÚBRICAS ACTIVAS
+                            			</h2></b>
+                        			</div>
+                        			<div class="body">
+                        				<div class="body table-responsive">
+                            				<table class="table table-bordered">
+                                				<thead>
+                                    				<tr>
+                                        				<th>N°</th>
+                                        				<th>Nombre</th>
+                                                        <th>Tópico</th>
+                                        				<th>Estado</th>
+                                                        <th>Tipo</th>
+                                                        <th><center>Acciones</center></th>
+                                    				</tr>
+                                				</thead>
+                                				<tbody>
+                                				{% if asignatura %}
+                                				{% for asignatura in asignatura %}
+                                    				<tr>
+                                        				<th scope="row">{{asignatura.curso.carrera.nombre}}</th>
+                                        				<td>{{asignatura.curso.nombre}}</td>
+                                                        <td>{{asignatura.curso.sigla}}</td>
+                                        				<td>{{asignatura.semestre}}{{asignatura.anio}}</td>
+                                                        <td>{{asignatura.semestre}}{{asignatura.anio}}</td>
+                                                        <td>
+                                                            <center>
+                                                                <a href="{% url 'detalleAsignatura' asignatura.pk %}" class="btn btn bg-cyan btn-circle waves-effect" title="Ir a Evaluaciones"><i class="material-icons">search</i></a>
+                                                                <a href="" class="btn btn bg-light-green btn-circle waves-effect" title="Ver Rúbricas"><i class="material-icons">drafts</i></a>
+                                                            </center>
+                                                        </td>
+                                    				</tr>
+                                    			{% endfor %}
+                                    			{% else %}
+                                    				<center><h5><b>¡No hay registros de Rúbricas para esta Evaluación! ¡Agrega una! </b></h5></center>
+                                    				<center><a href="" type="button" class="btn bg-orange btn-circle waves-effect waves-circle waves-float"><i class="material-icons">add</i></a></center>
+                                    			{% endif %}
+                                				</tbody>
+                            				</table>
+                                            <center><a href="{% url 'agregarCurso' %}" type="button" title= "Agregar Curso"class="btn bg-teal waves-effect btn-circle waves-circle waves-float"><i class="material-icons">add</i></a></center>
+                        				</div>
+                        			</div>
+
+                    			</div>
+               	 			</div>
+            			</div>
+					</div>
+
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="card">
+                                    <div class="header">
+                                        <h2><b>
+                                            HISTORIAL
+                                        </h2></b>
+                                    </div>
+                                    <div class="body">
+                                        <div class="body table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>N°</th>
+                                                        <th>Curso</th>
+                                                        <th>Carrera</th>
+                                                        <th>Nombre</th>
+                                                        <th>Tópico</th>
+                                                        <th>Estado</th>
+                                                        <th>Tipo</th>
+                                                        <th><center>Acciones</center></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% if curso %}
+                                                {% for curso in curso %}
+                                                    <tr>
+                                                        <th scope="row">{{curso.carrera.nombre}}</th>
+                                                        <td>{{curso.nombre}}</td>
+                                                        <td>{{curso.sigla}}</td>
+                                                        <td>{{curso.nombre}}</td>
+                                                        <td>{{curso.sigla}}</td>
+                                                        <td>{{curso.nombre}}</td>
+                                                        <td>{{curso.sigla}}</td>
+                                                        <td>
+                                                           <center> <a href="" class="btn btn bg-pink btn-circle waves-effect" title="Detalle de Curso"><i class="material-icons">search</i></a></center>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                                {% else %}
+                                                    <center><h5><b>¡No hay registros históricos de rúbricas en el sistema!<i class="material-icons">sentiment_very_dissatisfied</i></b></h5></center>
+                                                {% endif %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+				</div>
+			</div>
+		</div>
+</section>
+</body>
+
+
+{% endblock %}
