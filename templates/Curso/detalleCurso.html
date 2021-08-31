@@ -22,50 +22,89 @@
                     			<div class="card">
                         			<div class="header">
                             			<h2><b>
-                                			DETALLE ASIGNATURA
+                                			DETALLE GENERAL CURSO
                             			</h2></b>
                         			</div>
                         			<div class="body">
                                         <p>
-                                            Carrera: <b>{{asignatura.curso.carrera.nombre}}</b><br>
-                                            Curso: <b> <i>{{asignatura.curso.sigla}}</i> - {{asignatura.curso.nombre}}</b><br>                                           
+                                            Carrera: <b>{{curso.asignatura.carrera.nombre}}</b><br>
+                                            Curso: <b> <i>{{curso.asignatura.sigla}}</i> - {{curso.asignatura.nombre}}</b><br>                                           
                                         </p><br>
 
                                         <h4><b>
                                             <center>EVALUACIONES DE LA ASIGNATURA</center>
                                         </h4></b>
 
-                        				<div class="body table-responsive">
-                            				<table class="table table-bordered">
-                                				<thead>
-                                    				<tr>
-                                        				<th>Nombre</th>
-                                        				<th>Tipo</th>
-                                                        <th>Ponderación</th>
+                                    <div class="body">
+                                        <div class="body table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Evaluación</th>
+                                                        <th>Tipo</th>
+                                                        <th>% Ponderación</th>
+                                                        <th>Carácter</th>
+                                                        {% if rubrica%}{% for rubrica in rubrica %}<th>Rúbrica Asociada</th>{% endfor %}{% endif %}
+                                                        <th><center>Estado Rúbrica</center></th>
                                                         <th><center>Acciones</center></th>
-                                    				</tr>
-                                				</thead>
-                                				<tbody>
-                                				{% if curso %}
-                                    				<tr>
-                                        				<th scope="row">{{asignatura.curso.carrera.nombre}}</th>
-                                        				<td>{{asignatura.curso.nombre}}</td>
-                                                        <td>{{asignatura.curso.sigla}}</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% if evaluaciones %}
+                                                {% for evaluaciones in evaluaciones %}
+                                                    <tr>
+                                                        <td>{{evaluaciones.nombre}}</td>
+                                                        <td>{{evaluaciones.tipo.nombre}}</td>
+                                                        <td>{{evaluaciones.ponderacion}}</td>
+                                                        <td>{% if evaluaciones.is_grupal == True %} Grupal {% else %} Individual {% endif %}</td>
+            {% if rubrica %}{% for rubrica in rubrica %}<td>{{rubrica.nombre}}</td>
+                                                        <td><center><a class="btn {% if rubrica.estado.nombre == 'No Iniciada' %} btn-danger" href="{% url 'llenarRubrica' rubrica.pk %}" {% else %} btn-success" href=""{% endif %}">{{rubrica.estado.nombre}}</a></center></td>{% endfor %}{% endif %}
                                                         <td>
                                                             <center>
-                                                                <a href="" class="btn btn bg-cyan btn-circle waves-effect" title="Ir a Evaluaciones"><i class="material-icons">search</i></a>
-                                                                <a href="" class="btn btn bg-light-green btn-circle waves-effect" title="Ver Rúbricas"><i class="material-icons">drafts</i></a>
+                                                                {% if rubrica %}
+                                                                {% for rubrica in rubrica %}
+                                                                <a href="{% url 'verRubricaGeneral' rubrica.pk pk %}" class="btn btn bg-orange btn-circle waves-effect" title="Ver Rúbricas Asociadas"><i class="material-icons">search</i></a>
+                                                                {% endfor %}
+                                                                {% else %}
+                                                                <a href="{% url 'crearRubrica' evaluaciones.pk pka %}" class="btn btn bg-light-green btn-circle waves-effect" title="Agregar Rúbrica"><i class="material-icons">add</i></a>
+                                                                {% endif %}
+                                                                <a href="{% url 'editarEvaluacion' evaluaciones.pk %}" class="btn btn bg-blue btn-circle waves-effect" title="Editar Evaluación"><i class="material-icons">edit</i></a>
+                                                                <a href="" data-toggle="modal" data-target="#eliminarEvaluacion" class="btn btn bg-red btn-circle waves-effect" title="Eliminar Evaluación"><i class="material-icons">delete</i></a>
+
+                                                                  <!-- Elimnar Evaluacion Modal-->
+                                                                  <div class="modal fade" id="eliminarEvaluacion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                    <div class="modal-dialog" role="document">
+                                                                      <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                          <h5 class="modal-title" id="exampleModalLabel">¿Estás seguro que deseas eliminar  <i>{{evaluaciones.nombre}} - {{evaluaciones.tipo.nombre}}</i>?</h5>
+                                                                          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true">×</span>
+                                                                          </button>
+                                                                        </div>
+                                                                        <div class="modal-body">Selecciona el botón <b><i>'Sí'</i></b> para eliminar esta Evaluación. De lo contrario, sólo cierra este mensaje.</div>
+                                                                        <div class="modal-footer">
+                                                                          <button class="btn btn-warning" type="submit" data-dismiss="modal">Cancelar</button>
+                                                                          <a class="btn btn-danger" href="{% url 'eliminarEvaluacion' evaluaciones.pk %}">Sí</a>
+                                                                        </div>
+                                                                      </div>
+                                                                    </div>
+                                                                  </div>
                                                             </center>
                                                         </td>
-                                    				</tr>
-                                    			{% else %}
-                                                <center><h5><b>¡No hay registros de Evaluaciones en este curso! </b></h5></center>
-                                                    <center>
-                                                        <a href="{% url 'agregarCurso' %}" type="button" class="btn bg-pink btn-circle waves-effect waves-circle waves-float" title="Carga de alumnos manual"><i class="material-icons">add</i></a>
-                                                    </center>
-                                    			{% endif %}
+                                                    </tr>
+                                                {% endfor %}
+                                                    <td><b><i>Total</i></b></td>
+                                                    <td></td>
+                                                    <td><b>{{suma}}</b></td>
+                                                    <td></td>
+                                                {% else %}
+                                                    <center><h5><b>¡No hay registros de Evaluaciones en este curso! </b></h5></center>
+                                                {% endif %}
                                 				</tbody>
                             				</table>
+                                            <center>
+                                                <a href="{% url 'crear_evaluacion' curso.pk %}" type="button" class="btn bg-pink btn-circle waves-effect waves-circle waves-float" title="Carga de alumnos manual"><i class="material-icons">add</i></a>
+                                            </center>
                         				</div>
 
 <br>
@@ -78,36 +117,45 @@
                                             <table class="table table-bordered">
                                                 <thead>
                                                     <tr>
+                                                        <th>Carrera</th>
                                                         <th>RUT</th>
                                                         <th>Nombre</th>
                                                         <th>Teléfono</th>
                                                         <th>Mail</th>
+                                                        {% for evaluaciones in evaluaciones %}<th>Nota <b><i>{{evaluaciones.nombre}}</i></b></th>{% endfor %}
                                                         <th><center>Acciones</center></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                {% if curso %}
+                                                {% if alumno %}
+                                                {% for alumno in alumno %}
                                                     <tr>
-                                                        <th scope="row">{{asignatura.curso.carrera.nombre}}</th>
-                                                        <td>{{asignatura.curso.nombre}}</td>
-                                                        <td>{{asignatura.curso.sigla}}</td>
-                                                        <td>{{asignatura.semestre}}{{asignatura.anio}}</td>
+                                                        <th scope="row">{{alumno.alumno.carrera.nombre}}</th>
+                                                        <td>{{alumno.alumno.rut}}</td>
+                                                        <td>{{alumno.alumno.nombre}} {{alumno.alumno.apellido_pat}} {{alumno.alumno.apellido_mat}}</td>
+                                                        <td>{% if alumno.alumno.telefono == None %}<b><i>Sin Registro</i></b> {% else %} {{alumno.alumno.telefono}}{% endif %}</td>
+                                                        <td>{{alumno.alumno.mail}}</td>
+                                                        {% for evaluaciones in evaluaciones %}<td></td>{% endfor %}
                                                         <td>
                                                             <center>
-                                                                <a href="" class="btn btn bg-cyan btn-circle waves-effect" title="Ir a Evaluaciones"><i class="material-icons">search</i></a>
+                                                                <a href="{% url 'fichaAcademica' alumno.alumno.pk pka %}" class="btn btn bg-cyan btn-circle waves-effect" title="Ver Ficha del Alumno"><i class="material-icons">search</i></a>
                                                                 <a href="" class="btn btn bg-light-green btn-circle waves-effect" title="Ver Rúbricas"><i class="material-icons">drafts</i></a>
                                                             </center>
                                                         </td>
                                                     </tr>
+                                                {% endfor %}    
                                                 {% else %}
                                                 <center><h5><b>¡No hay registros de Alumnos inscritos en este curso! </b></h5></center>
-                                                    <center>
-                                                        <a href="{% url 'agregarAlumnoManual' %}" type="button" class="btn bg-purple btn-circle waves-effect waves-circle waves-float" title="Carga de alumnos manual"><i class="material-icons">add</i></a>
-                                                        <a href="{% url 'agregarCurso' %}" type="button" class="btn bg-deep-purple btn-circle waves-effect waves-circle waves-float" title="Carga de alumnos en masa"><i class="material-icons">add</i></a>
-                                                    </center>
                                                 {% endif %}
                                                 </tbody>
                                             </table>
+                                                    <center>
+                                                        <a href="{% url 'agregarAlumnoManual' pk %}" type="button" class="btn bg-purple btn-circle waves-effect waves-circle waves-float" title="Carga de alumnos manual"><i class="material-icons">add</i></a>
+                                                        <a href="{% url 'plantilla_alumnos_excel' pk %}" type="button" class="btn bg-deep-purple btn-circle waves-effect waves-circle waves-float" title="Carga de alumnos en masa"><i class="material-icons">get_app</i></a>
+                                                        <a href="{% url 'subir_plantilla_alumnos' pk %}" type="button" class="btn bg-pink btn-circle waves-effect waves-circle waves-float" title="Carga de alumnos en masa"><i class="material-icons">file_upload</i></a>
+                                                        <a href="{% url 'listadoAlumnosRegistrados' pk %}" type="button" class="btn bg-teal btn-circle waves-effect waves-circle waves-float" title="Ver Listado de Alumnos registrados por el sistema"><i class="material-icons">contacts</i></a>
+                                                    </center>
+                                                
                                         </div>
                         			</div>
 
@@ -120,6 +168,7 @@
 		</div>
 </section>
 </body>
+
 
 
 {% endblock %}

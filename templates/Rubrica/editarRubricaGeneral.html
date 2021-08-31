@@ -1,0 +1,67 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+<body class="theme-amber">
+<section class="content">
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2><center><b>
+                                EDITAR RÚBRICA
+                                <small>Edita la rúbrica</small>
+                        </h2></center></b>
+                    </div>
+
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="card">
+                                    <div class="header">
+                                        <h2><b>
+                                            EDITAR RÚBRICA - DOCENTE
+                                        </h2></b>
+                                    </div>
+
+                                    <div class="body">
+                                        <form method="POST">{% csrf_token %}
+                                            <div class="form-row">
+                                                <div class="col-md-4 mb-4">
+                                                    <label for="{{form.nombre.nombre}}">{{form.nombre.label}}</label>
+                                                    {{form.nombre}}
+                                                </div>
+                                                <div class="col-md-5 mb-4 switch">
+                                                    <b>{{form.is_private.label}}</b> <br><br>
+                                                    <label><b>NO</b><input type="checkbox" value={{form.is_private}}> 
+                                                        <span class="lever">
+                                                        </span> 
+                                                        <b>SÍ</b>
+                                                    </label>
+                                                    {{form.is_private}}
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-sm-10">
+                                                    <button type="submit" class="btn btn-success">Agregar</button>
+                                                    <a href="{% url 'detalleCurso' rubrica.curso.pk %}" class="btn btn-danger" title="Editar información" class="btn btn-success btn-lg btn-sm">Cancelar</a>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+</section>
+</body>
+
+
+
+{% endblock %}

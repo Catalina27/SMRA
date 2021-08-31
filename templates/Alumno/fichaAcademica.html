@@ -1,0 +1,74 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+<body class="theme-amber">
+<section class="content">
+		<div class="row clearfix">
+    		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        		<div class="card">
+
+                    <div class="header">
+                        <h2><center><b>
+                                FICHA ACADÉMICA - {{alumno.nombre}} {{alumno.apellido_pat}} {{alumno.apellido_mat}}
+                                <small>Ficha Académica del alumno</small>
+                        </h2></center></b>
+                    </div>
+
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="card">
+                                    <div class="header">
+                                        <h2><b>
+                                            <p style="color:#07AA1E"><b><i>FICHA ACADÉMICA</i></b></p>
+                                        </h2></b>
+                                    </div>
+
+                                    <div class="body">
+                                        <p><i class="material-icons">person</i> <b>Nombre:</b> {{alumno.nombre}} {{alumno.apellido_pat}} {{alumno.apellido_mat}}<br>
+                                           <i class="material-icons">school</i> <b>Carrera:</b> {{alumno.carrera}} <br>
+                                           <i class="material-icons">email</i> <b>Mail:</b> {{alumno.mail}} <br>
+                                           <i class="material-icons">call</i> <b>Teléfono:</b> {{alumno.telefono}} <br>
+                                        </p>
+
+
+                                        <div class="body table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Curso</th>
+                                                        <th>Periodo</th>
+                                                        <th>Profesor Jefe</th>
+                                                        {% for evaluaciones in evaluaciones %}<th>Nota {{evaluaciones.nombre}}</th>{% endfor %}
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% if curso %}
+                                                    <tr>
+                                                        <th scope="row">{{curso.asignatura.sigla}} - {{curso.asignatura.nombre}}</th>
+                                                        <th>{{curso.semestre}} - {{curso.anio}}</th>
+                                                        <th>{{curso.profesor.username}}</th>
+                                                        {% for evaluaciones in evaluaciones %}<td></td> {% endfor %}
+                                                    </tr>
+                                                {% else %}
+                                                    <center><h5><b>¡No has registrado ninguna Asignatura!</b></h5></center>
+                                                {% endif %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <center> <a href="{% url 'detalleCurso' pka %}" class="btn btn bg-green btn-circle waves-effect" title="Detalle de Curso"><i class="material-icons">keyboard_arrow_left</i></a></center>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+				</div>
+			</div>
+		</div>
+</section>
+</body>
+
+{% endblock %}

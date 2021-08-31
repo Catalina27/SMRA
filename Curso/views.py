@@ -49,9 +49,11 @@ import random
 from datetime import date
 from datetime import datetime
 
-from .models import Curso, Asignatura, Tipo_evaluacion, Evaluacion, Evaluacion_alumnos, Asignatura_alumnos
-from .forms import CursoForm, AsignaturaForm
-from Usuario.models import Persona
+from .models import Curso, Asignatura, Tipo_evaluacion, Evaluacion, Evaluacion_alumnos, Asignatura_alumnos, Asignatura_alumnos
+from .forms import CursoForm, AsignaturaForm, EvaluacionForm
+from Usuario.models import Persona, Alumno
+from django.contrib.auth.models import AbstractUser, User
+from Rubrica.models import Rubrica
 
 # Create your views here.
 
@@ -60,44 +62,132 @@ def misCursos(request):
 	usuario = Persona.objects.get(user=current_user.id)
 	tipo_usuario = usuario.tipo_usuario
 
-	curso = Curso.objects.all()
-	asignatura = Asignatura.objects.filter(anio='2021')
+	curso = Curso.objects.filter(anio='2021')
+	asignatura = Asignatura.objects.all()
+	rubricas = Rubrica.objects.all()
 	return render (request, 'Curso/misCursos.html',{'usuario':usuario, 'tipo_usuario':tipo_usuario, 'curso':curso, 'asignatura':asignatura})
 
 
-def agregarCurso(request):
-	cursos = Curso.objects.all()
-	asignaturas = Asignatura.objects.all()
-	if request.method == "POST":
-		form = CursoForm(request.POST)
-		if form.is_valid():
-			curso = form.save(commit=False)
-			curso.save()
-			return redirect('agregarCurso')
-	else:
-			form = CursoForm()
-	return render (request, 'Curso/agregarCurso.html', {'form':form, 'cursos':cursos, 'asignaturas':asignaturas})
+def agregarAsignatura(request):
+	cursos = Curso.objects.filter(profesor=request.user.id)
+	asignaturas = Asignatura.objects.filter(autor=request.user.id)
+	cursoList = []
+	user = request.user.id
 
-
-def agregarAsignatura(request,pk):
-	curso = get_object_or_404(Curso, pk=pk)
-	print(curso)
+	for asignaturi in Asignatura.objects.filter(autor=request.user.id):
+		if Curso.objects.filter(profesor=asignaturi.autor.id).filter(asignatura=asignaturi.id):
+			print('Ya está en tu listado de cursos')
+		else:
+			print('No está en tu listado de cursos')
+			cursoList.append(asignaturi)
 
 	if request.method == "POST":
-		form = AsignaturaForm(request.POST or None)
+		form = AsignaturaForm(request.POST)
 		if form.is_valid():
 			asignatura = form.save(commit=False)
-			asignatura.curso = curso
+			asignatura.autor = User.objects.get(pk=request.user.id)
 			asignatura.save()
+			return redirect('agregarAsignatura')
+	else:
+			form = AsignaturaForm()
+	return render (request, 'Curso/agregarAsignatura.html', {'form':form, 'cursos':cursos,'cursoList':cursoList})
+
+
+def agregarCurso(request,pk):
+	asignatura = get_object_or_404(Asignatura, pk=pk)
+	print(asignatura)
+
+	if request.method == "POST":
+		form = CursoForm(request.POST or None)
+		if form.is_valid():
+			curso = form.save(commit=False)
+			curso.asignatura = asignatura
+			curso.profesor = User.objects.get(pk=request.user.id)
+			curso.save()
 			print('se creó')
 			return redirect('misCursos')
 	else:
-		form = AsignaturaForm()
+		form = CursoForm()
 		print('no se creó')
-	return render (request, 'Curso/agregarAsignatura.html', {'form':form})
+	return render (request, 'Curso/agregarCurso.html', {'form':form})
 
 
-def detalleAsignatura(request,pk):
+def detalleCurso(request,pk):
+	suma = 0
+
+	for x in Evaluacion.objects.filter(curso=pk):
+		suma = suma + x.ponderacion
+
+	print(suma)
+
+	curso = Curso.objects.get(pk=pk)
+	evaluaciones = Evaluacion.objects.filter(curso=pk)
+	alumno = Asignatura_alumnos.objects.filter(curso=pk)
+	rubrica = Rubrica.objects.raw('SELECT * FROM "Rubrica_rubrica" as rubrica JOIN "Curso_evaluacion" as evaluacion ON rubrica.curso_id = evaluacion.curso_id WHERE rubrica.curso_id = ' + str(pk) + ';')
+
+	return render(request, 'Curso/detalleCurso.html', {'curso':curso,'pk':pk, 'pka':pk,'evaluaciones':evaluaciones,'suma':suma,'alumno':alumno,'rubrica':rubrica})
+
+
+def detalle_general_asignatura(request,pk):
 	asignatura = Asignatura.objects.get(pk=pk)
 
-	return render(request, 'Curso/detalleCurso.html', {'asignatura':asignatura,'pk':pk})
+	return render(request, 'Curso/detalle_general_asignatura.html', {'asignatura':asignatura,'pk':pk})
+
+
+def crearEvaluacion(request,pk):
+	curso = Curso.objects.get(pk=pk)
+	evaluaciones = Evaluacion.objects.filter(curso=pk)
+
+	if request.method == "POST":
+		form = EvaluacionForm(request.POST)
+		if form.is_valid():
+			evaluacion = form.save(commit=False)
+			evaluacion.curso = curso
+			evaluacion.save()
+			return redirect('crear_evaluacion',pk)
+	else:
+			form = EvaluacionForm()
+	return render (request, 'Evaluacion/crear_evaluacion.html', {'form':form, 'evaluaciones':evaluaciones,'pk':pk})
+
+
+def editarEvaluacion(request,pk):
+	evaluacion = Evaluacion.objects.get(pk=pk)
+
+	if request.method == 'GET':
+		form = EvaluacionForm(instance=evaluacion)
+	else:
+		form = EvaluacionForm(request.POST, instance=evaluacion)
+		if form.is_valid():
+			form.save()
+		return redirect('detalleCurso', evaluacion.curso.pk)
+
+	return render(request, 'Evaluacion/editarEvaluacion.html', {'form':form,'evaluacion':evaluacion})
+
+
+def eliminarEvaluacion(request,pk):
+
+	evaluacion = Evaluacion.objects.get(pk=pk)
+	evaluacion.delete()
+	
+	return redirect ('detalleCurso',evaluacion.curso.pk)
+
+
+####################### AGREGAR ALUMNO AL CURSO #####################
+
+def agregar_alumno_a_curso(request,pk,pka):
+
+	alumno = Alumno.objects.get(pk=pk) #obtengo el alumno
+	curso = Curso.objects.get(pk=pka) #obtengo el curso
+
+	alumno_en_curso = Asignatura_alumnos.objects.create(curso=curso, alumno=alumno)
+	alumno_en_curso.save()
+
+	return redirect('listadoAlumnosRegistrados',pka)
+
+
+def eliminar_alumno_a_curso(request,pk,pka):
+
+	alumno = Asignatura_alumnos.objects.get(alumno=pk) #obtengo el alumno
+	alumno.delete()
+
+	return redirect('listadoAlumnosRegistrados', pka)

@@ -27,6 +27,10 @@
                         			<div class="body">
               							<form method="POST">{% csrf_token %}
                 							<div class="form-row">
+                                                <div class="col-md-4 mb-4">
+                                                    <label for="{{form.carrera.carrera}}">{{form.carrera.label}}</label>
+                                                    {{form.carrera}}
+                                                </div>
                                 				<div class="col-md-4 mb-4">
                     								<label for="{{form.rut.rut}}">{{form.rut.label}}</label>
                       								{{form.rut}}
@@ -55,7 +59,7 @@
                   							<div class="form-group row">
                       							<div class="col-sm-10">
                         							<button type="submit" class="btn bg-cyan">Agregar</button>
-                        							<a href="{% url 'misCursos' %}" class="btn btn-danger" title="Editar información" class="btn btn-success btn-lg btn-sm">Regresar</a>
+                        							<a href="{% url 'detalleCurso' pka %}" class="btn btn-danger" title="Editar información" class="btn btn-success btn-lg btn-sm">Regresar</a>
                       							</div>
                     						</div>
               							</form>
@@ -63,7 +67,7 @@
                     			</div>
                	 			</div>
             			</div>
-					</div><hr>
+					</div>
 
 					<div class="body">
             			<div class="row clearfix">
@@ -88,9 +92,11 @@
                                                         <th><center>Acciones</center></th>
                                     				</tr>
                                 				</thead>
-                                				<tbody>
+                                                <p><b><i> ING EJECUCIÓN INF</i></b></p>
+                                				<tbody> 
                                 				{% if alumno %}
                                 				{% for alumno in alumno %}
+                                                {% if alumno.carrera.nombre == "Ingeniería de Ejecución en Informática" %}
                                     				<tr>
                                         				<th>{{alumno.rut}}</th>
                                                         <td>{{alumno.nombre}} {{alumno.apellido_pat}} {{alumno.apellido_mat}}</td>
@@ -98,19 +104,100 @@
                                         				<td>{{alumno.telefono}}</td>
                                                         <td>
                                                             <center>
-                                                                <a href="{% url 'editarAlumno' alumno.pk %}" type="button" class="btn bg-orange btn-circle waves-effect waves-circle waves-float" title="Carga de alumnos manual"><i class="material-icons">edit</i></a>
-                                                                <a href="{% url 'agregarAlumnoManual' %}" type="button" class="btn bg-red btn-circle waves-effect waves-circle waves-float" title="Carga de alumnos manual"><i class="material-icons">delete</i></a>
+                                                                <a href="" type="button" class="btn bg-orange btn-circle waves-effect waves-circle waves-float" title="Carga de alumnos manual"><i class="material-icons">edit</i></a>
+                                                                <a href="" type="button" class="btn bg-red btn-circle waves-effect waves-circle waves-float" title="Carga de alumnos manual"><i class="material-icons">delete</i></a>
                                                             </center>
                                                         </td>
                                     				</tr>
-                                    			{% endfor %}
+                                                {% endif %}
+                                                {% endfor %}
                                     			{% else %}
                                     				<center><h5><b>No hay registros de Alumnos <i class="material-icons">mood_bad</i></b></h5></center>
                                     			{% endif %}
                                 				</tbody>
                             				</table>
                         				</div>
-                        			</div>
+                                    </div>
+
+                                    <div class="body">
+                                        <div class="body table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>RUT</th>
+                                                        <th>Alumno</th>
+                                                        <th>Mail</th>
+                                                        <th>Teléfono</th>
+                                                        <th><center>Acciones</center></th>
+                                                    </tr>
+                                                </thead>
+                                                <p><b><i> ING. CIVIL INFORMÁTICA</i></b></p>
+                                                <tbody> 
+                                                {% if alumno %}
+                                                {% for alumno in alumno %}
+                                                {% if alumno.carrera.nombre == "Ingeniería Civil Informática" %}
+                                                    <tr>
+                                                        <th>{{alumno.rut}}</th>
+                                                        <td>{{alumno.nombre}} {{alumno.apellido_pat}} {{alumno.apellido_mat}}</td>
+                                                        <td>{{alumno.mail}}</td>
+                                                        <td>{{alumno.telefono}}</td>
+                                                        <td>
+                                                            <center>
+                                                                <a href="{% url 'editarAlumno' alumno.pk pk %}" type="button" class="btn bg-orange btn-circle waves-effect waves-circle waves-float" title="Carga de alumnos manual"><i class="material-icons">edit</i></a>
+                                                                <a href="{% url 'agregarAlumnoManual' pk %}" type="button" class="btn bg-red btn-circle waves-effect waves-circle waves-float" title="Carga de alumnos manual"><i class="material-icons">delete</i></a>
+                                                            </center>
+                                                        </td>
+                                                    </tr>
+                                                {% endif %}
+                                                {% endfor %}
+                                                {% else %}
+                                                    <center><h5><b>No hay registros de Alumnos <i class="material-icons">mood_bad</i></b></h5></center>
+                                                {% endif %}<br>
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <div class="body">
+                                        <div class="body table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>RUT</th>
+                                                        <th>Alumno</th>
+                                                        <th>Mail</th>
+                                                        <th>Teléfono</th>
+                                                        <th><center>Acciones</center></th>
+                                                    </tr>
+                                                </thead>
+                                                <p><b><i> ING. CIVIL EN CIENCIA DE DATOS</i></b></p>
+                                                <tbody> 
+                                                {% if alumno %}
+                                                {% for alumno in alumno %}
+                                                {% if alumno.carrera.nombre == "Ingeniería Civil en Ciencia de Datos" %}
+                                                    <tr>
+                                                        <th>{{alumno.rut}}</th>
+                                                        <td>{{alumno.nombre}} {{alumno.apellido_pat}} {{alumno.apellido_mat}}</td>
+                                                        <td>{{alumno.mail}}</td>
+                                                        <td>{{alumno.telefono}}</td>
+                                                        <td>
+                                                            <center>
+                                                                <a href="{% url 'editarAlumno' alumno.pk pk %}" type="button" class="btn bg-orange btn-circle waves-effect waves-circle waves-float" title="Carga de alumnos manual"><i class="material-icons">edit</i></a>
+                                                                <a href="{% url 'agregarAlumnoManual' pk %}" type="button" class="btn bg-red btn-circle waves-effect waves-circle waves-float" title="Carga de alumnos manual"><i class="material-icons">delete</i></a>
+                                                            </center>
+                                                        </td>
+                                                    </tr>
+                                                {% endif %}
+                                                {% endfor %}
+                                                {% else %}
+                                                    <center><h5><b>No hay registros de Alumnos <i class="material-icons">mood_bad</i></b></h5></center>
+                                                {% endif %}<br>
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+                                    </div>
 
                     			</div>
                	 			</div>

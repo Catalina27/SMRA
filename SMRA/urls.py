@@ -22,6 +22,7 @@ urlpatterns = [
     path('',include('Usuario.urls')),
     path('',include('Rubrica.urls')),
     path('', include('Curso.urls')),
+    path('', include('RA.urls')),
     #path('', include('Area.urls')),
     #path('', include('Carrera.urls')),
     #path('', include('Categoria.urls')),

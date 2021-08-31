@@ -1,0 +1,89 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+<body class="theme-amber">
+<section class="content">
+		<div class="row clearfix">
+    		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        		<div class="card">
+                    <div class="header">
+                        <h2><center><b>
+                                LISTADO ALUMNOS REGISTRADOS
+                                <small>Listado de alumnos registrados en el sistema que aún no son parte del curso seleccionado</small>
+                        </h2></center></b>
+                    </div>
+
+					<div class="body">
+            			<div class="row clearfix">
+                			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    			<div class="card">
+                        			<div class="header">
+                            			<h2><b>
+                                			ALUMNOS INGRESADOS
+                                			<small>Alumnos ingresados al sistema que aún no pertenecen al curso</small>
+                            			</h2></b>
+                        			</div>
+
+                        			<div class="body">
+                        				<div class="body table-responsive">
+                            				<table class="table table-bordered">
+                                				<thead>
+                                    				<tr>
+                                                        <th>Carrera</th>
+                                        				<th>RUT</th>
+                                        				<th>Alumno</th>
+                                                        <th>Mail</th>
+                                                        <th>Teléfono</th>
+                                                        <th><center>¿Desea ingresar este alumno al curso seleccionado?</center></th>
+                                    				</tr>
+                                				</thead>
+                                				<tbody>
+                                				{% if alumnos %}
+                                				{% for alumnos in alumnos %}
+                                    				<tr>
+                                                        <th>{{alumnos.carrera.nombre}}</th>
+                                        				<th>{{alumnos.rut}}</th>
+                                                        <td>{{alumnos.nombre}} {{alumnos.apellido_pat}} {{alumnos.apellido_mat}}</td>
+                                        				<td>{{alumnos.mail}}</td>
+                                        				<td>{{alumnos.telefono}}</td>
+                                                        <td>
+                                                            <center>
+                                                                {% if alumno_en_curso %}
+                                                                    {% for alumno_en_curso in alumno_en_curso %}
+                                                                    {% if alumnos.pk == alumno_en_curso.alumno.pk %} 
+                                                                    <a href="{% url 'eliminar_alumno_a_curso' alumnos.pk pka %}" type="button" class="btn bg-red btn-circle waves-effect waves-circle waves-float" title="Remover el alumno del curso"><i class="material-icons">delete</i></a>
+                                                                    {% endif %}
+                                                                    {% endfor %}
+                                                                {% endif %}
+                                                                <a href="{% url 'agregar_alumno_a_curso' alumnos.pk pka %}" type="button" class="btn bg-green btn-circle waves-effect waves-circle waves-float" title="Ingresar el alumno al curso"><i class="material-icons">check</i></a>
+                                                            </center>
+                                                        </td>
+                                    				</tr>
+                                    			{% endfor %}
+                                    			{% else %}
+                                    				<center><h5><b>No hay registros de Alumnos <i class="material-icons">mood_bad</i></b></h5></center>
+                                    			{% endif %}
+                                				</tbody>
+                            				</table>
+                        				</div>
+                        			</div>
+
+                    			</div>
+               	 			</div>
+            			</div>
+                                            <a href="{% url 'detalleCurso' pka %}" type="button" class="btn bg-orange btn-circle waves-effect waves-circle waves-float" title="Ingresar el alumno al curso"><i class="material-icons">keyboard_return</i></a>
+					</div>
+
+
+				</div>
+			</div>
+		</div>
+
+
+</section>
+</body>
+
+
+
+{% endblock %}

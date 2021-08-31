@@ -36,6 +36,7 @@ class AlumnoForm(forms.ModelForm):
 	class Meta:
 		model = Alumno
 		fields = [
+			'carrera',
 			'rut',
 			'nombre',
 			'apellido_pat',
@@ -44,6 +45,7 @@ class AlumnoForm(forms.ModelForm):
 			'telefono',
 		]
 		labels = {
+			'carrera': 'Carrera',
 			'rut': 'RUT:',
 			'nombre': 'Nombre',
 			'apellido_pat': 'Apellido Paterno',
@@ -52,6 +54,7 @@ class AlumnoForm(forms.ModelForm):
 			'telefono': 'Teléfono',
 		}
 		widgets = {
+			'carrera': forms.Select(attrs={'class': 'form-control'}),
 			'rut': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: 19271880-5'}),
 			'nombre': forms.TextInput(attrs={'class': 'form-control','placeholder': 'Ej: Camilo'}),
 			'apellido_pat': forms.TextInput(attrs={'class': 'form-control','placeholder': 'Ej: Fernández'}),

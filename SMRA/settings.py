@@ -114,7 +114,7 @@ BOOTSTRAP4 = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'SMRA1',
+        'NAME': 'SMRA2',
         'USER': 'postgres',
         'PASSWORD': '123',
         'HOST': 'localhost',

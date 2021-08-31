@@ -55,7 +55,11 @@ from Usuario.models import Persona
 
 def index(request):
 	current_user = request.user
-	usuario = Persona.objects.get(user=current_user.id)
+	print(current_user)
+	if current_user:
+		usuario = Persona.objects.get(user=current_user.id)
+	else:
+		usuario = Persona.objects.get(user=1)
 	tipo_usuario = usuario.tipo_usuario
 	return render (request, 'base/index.html',{'usuario':usuario})
 

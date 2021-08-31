@@ -49,15 +49,135 @@ import random
 from datetime import date
 from datetime import datetime
 
-from .models import Rubrica
-from .forms import RubricaForm
-
+from .models import Rubrica, Topico_rubricas, Topico, Puntaje, Calificacion_aspecto
+from .forms import RubricaForm, TopicoForm, PuntajeForm
+from django.contrib.auth.models import AbstractUser, User
+from Curso.models import Evaluacion, Curso
 # Create your views here.
 
 
-def crearRubrica(request):
-	return render(request, 'Rubrica/crear_rubrica.html')
+#def crearRubrica(request):
+#	return render(request, 'Rubrica/crear_rubrica.html')
 
 
-def misRubricas(request):
-	return render(request, 'Rubrica/misRubricas.html')
+def misRubricas(request,pk):
+
+	rubricas = Rubrica.objects.filter(autor=User.objects.get(pk=request.user.id))
+
+	return render(request, 'Rubrica/misRubricas.html',{'pk':pk,'rubricas':rubricas})
+
+
+def crearRubrica(request,pk,pka):
+
+	rubrica = Rubrica.objects.filter(evaluacion=pk)
+
+	if request.method == "POST":
+		form = RubricaForm(request.POST)
+		if form.is_valid():
+			rubrica = form.save(commit=False)
+			rubrica.evaluacion = Evaluacion.objects.get(pk=pk)
+			rubrica.curso = Curso.objects.get(pk=pka)
+			rubrica.autor = User.objects.get(pk=request.user.id)
+			rubrica.save()
+			return redirect('crearRubrica',pk,pka)
+	else:
+			form = RubricaForm()
+	return render (request, 'Rubrica/crear_rubrica.html', {'form':form, 'rubrica':rubrica,'pk':pk,'pka':pka})
+
+
+def verRubricaEvaluacion(request,pk):
+
+	rubrica = Rubrica.objects.get(pk=pk)
+
+	return render (request, 'Rubrica/verRubricaEvaluacion.html', {'rubrica':rubrica,'pk':pk})
+
+
+def editarRubricaGeneral(request,pk):
+
+	rubrica = Rubrica.objects.get(pk=pk)
+
+	if request.method == 'GET':
+		form = RubricaForm(instance=rubrica)
+	else:
+		form = RubricaForm(request.POST, instance=rubrica)
+		if form.is_valid():
+			form.save()
+		return redirect('detalleCurso', rubrica.curso.pk)
+
+	return render(request, 'Rubrica/editarRubricaGeneral.html', {'form':form,'rubrica':rubrica})
+
+
+def eliminarRubricaGeneral(request,pk):
+
+	rubrica = Rubrica.objects.get(pk=pk)
+	rubrica.delete()
+	
+	return redirect ('detalleCurso',rubrica.curso.pk)
+
+
+def verRubricaGeneral(request,pk,pka):
+
+	rubrica = Rubrica.objects.get(pk=pk)
+
+	return render (request,'Rubrica/verRubricaGeneral.html',{'rubrica':rubrica,'pk':pk,'pka':pka})
+
+
+def llenarRubrica(request,pk):
+
+	rubrica = Rubrica.objects.get(pk=pk)
+	aspectos = Topico.objects.filter(rubrica=pk)
+
+	return render (request, 'Rubrica/llenarRubrica.html', {'rubrica':rubrica,'aspectos':aspectos,'pk':pk})
+
+
+def crearAspecto(request,pk):
+
+	aspectos = Topico.objects.filter(rubrica=pk)
+	rubrica = Rubrica.objects.get(pk=pk)
+	pka = rubrica.curso.pk
+
+	if request.method == "POST":
+		form = TopicoForm(request.POST)
+		if form.is_valid():
+			aspecto = form.save(commit=False)
+			aspecto.rubrica = Rubrica.objects.get(pk=pk)
+			aspecto.save()
+
+			for x in Calificacion_aspecto.objects.all():
+				puntaje = Puntaje.objects.create(rubrica=Rubrica.objects.get(pk=pk),topico=Topico.objects.get(pk=aspecto.pk), calificacion=Calificacion_aspecto.objects.get(pk=x.pk))
+				puntaje.save()
+			return redirect('crearAspecto',pk)
+	else:
+			form = TopicoForm()
+	return render (request, 'Rubrica/crearAspecto.html', {'form':form,'rubrica':rubrica,'aspectos':aspectos,'pk':pk,'pka':pka})
+
+
+def eliminarAspecto(request,pk):
+
+	aspecto = Topico.objects.get(pk=pk)
+	aspecto.delete()
+	
+	return redirect ('crearAspecto',aspecto.rubrica.pk)
+
+
+def puntuarAspecto(request,pk,pka):
+
+	aspectos = Topico.objects.filter(rubrica=pk)
+	rubrica = Rubrica.objects.get(pk=pk)
+	calificacion = Calificacion_aspecto.objects.all()
+	puntajes = []
+
+	for aspecto in Topico.objects.filter(rubrica=pk):
+		for p in Puntaje.objects.filter(topico=aspecto).order_by('calificacion'):
+			puntajes.append(p)
+			puntaje = Puntaje.objects.get(pk=p.pk)
+
+			if request.method == "GET":
+				form = PuntajeForm(instance=puntaje)
+			else:
+				form = PuntajeForm(request.POST, instance=puntaje)
+				if form.is_valid():
+					form.save()
+					return redirect('puntuarAspecto',pk,pka)
+	return render (request, 'Rubrica/puntuarAspecto.html', {'form':form,'rubrica':rubrica,'aspectos':aspectos,'calificacion':calificacion,'puntajes':puntajes,'pk':pk,'pka':pka})
+

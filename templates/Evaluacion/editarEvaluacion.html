@@ -1,0 +1,66 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+<body class="theme-amber">
+<section class="content">
+		<div class="row clearfix">
+    		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        		<div class="card">
+                    <div class="header">
+                        <h2><center><b>
+                                EDITAR EVALUACIÓN
+                                <small>Edita la evaluación registrada en el sistema</small>
+                        </h2></center></b>
+                    </div>
+
+					<div class="body">
+            			<div class="row clearfix">
+                			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    			<div class="card">
+                        			<div class="header">
+                            			<h2><b>
+                                			EDITAR EVALUACIÓN - DOCENTE
+                            			</h2></b>
+                        			</div>
+
+                        			<div class="body">
+              							<form method="POST">{% csrf_token %}
+                							<div class="form-row">
+                                				<div class="col-md-3 mb-3">
+                    								<label for="{{form.nombre.nombre}}">{{form.nombre.label}}</label>
+                      								{{form.nombre}}
+                    							</div>
+                    							<div class="col-md-3 mb-3">
+                    								<label for="{{form.tipo.tipo}}">{{form.tipo.label}}</label>
+                      								{{form.tipo}}
+                    							</div>
+                    							<div class="col-md-3 mb-3 show-tick">
+                      								<label for="{{form.ponderacion.ponderacion}}">{{form.ponderacion.label}}</label>
+                      								{{form.ponderacion}}
+                    							</div>
+                                                <div class="col-md-5 mb-4 switch">
+                                                    <b>{{form.is_grupal.label}}</b> <br>
+                                                    <label>NO<input type="checkbox" value={{form.is_grupal}}> 
+                                                        <span class="lever">
+                                                        </span> 
+                                                        SÍ
+                                                    </label>
+                                                    {{form.is_grupal}}
+                                                </div>
+                  							</div>
+                  							<div class="form-group row">
+                      							<div class="col-sm-10">
+                        							<button type="submit" class="btn btn-info">Editar</button>
+                        							<a href="{% url 'detalleCurso' evaluacion.curso.pk %}" class="btn btn-danger" title="Editar información" class="btn btn-success btn-lg btn-sm">Cancelar</a>
+                      							</div>
+                    						</div>
+              							</form>
+                        			</div>
+                    			</div>
+               	 			</div>
+            			</div>
+					</div>
+
+
+{% endblock %}

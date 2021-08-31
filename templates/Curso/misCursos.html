@@ -22,7 +22,7 @@
                     			<div class="card">
                         			<div class="header">
                             			<h2><b>
-                                			ASIGNATURAS
+                                			Cursos Activos
                             			</h2></b>
                         			</div>
                         			<div class="body">
@@ -31,35 +31,37 @@
                                 				<thead>
                                     				<tr>
                                         				<th>Carrera</th>
-                                        				<th>Asignatura</th>
+                                        				<th>Curso</th>
                                                         <th>Sigla</th>
                                         				<th>Periodo</th>
+                                                        <th>Paralelo</th>
                                                         <th><center>Acciones</center></th>
                                     				</tr>
                                 				</thead>
                                 				<tbody>
-                                				{% if asignatura %}
-                                				{% for asignatura in asignatura %}
+                                				{% if curso %}
+                                				{% for curso in curso %}
                                     				<tr>
-                                        				<th scope="row">{{asignatura.curso.carrera.nombre}}</th>
-                                        				<td>{{asignatura.curso.nombre}}</td>
-                                                        <td>{{asignatura.curso.sigla}}</td>
-                                        				<td>{{asignatura.semestre}}{{asignatura.anio}}</td>
+                                        				<th scope="row">{{curso.asignatura.carrera.nombre}}</th>
+                                        				<td>{{curso.asignatura.nombre}}</td>
+                                                        <td>{{curso.asignatura.sigla}}</td>
+                                        				<td>{{curso.semestre}}-{{curso.anio}}</td>
+                                                        <td>{{curso.paralelo.nombre}}</td>
                                                         <td>
                                                             <center>
-                                                                <a href="{% url 'detalleAsignatura' asignatura.pk %}" class="btn btn bg-cyan btn-circle waves-effect" title="Ir a Evaluaciones"><i class="material-icons">search</i></a>
-                                                                <a href="{% url 'misRubricas' %}" class="btn btn bg-light-green btn-circle waves-effect" title="Ver Rúbricas"><i class="material-icons">drafts</i></a>
+                                                                <a href="{% url 'detalleCurso' curso.pk %}" class="btn btn bg-cyan btn-circle waves-effect" title="Ir a Evaluaciones"><i class="material-icons">search</i></a>
+                                                                <a href="" class="btn btn bg-light-green btn-circle waves-effect" title="Ver Rúbricas"><i class="material-icons">drafts</i></a>
                                                             </center>
                                                         </td>
                                     				</tr>
                                     			{% endfor %}
                                     			{% else %}
-                                    				<center><h5><b>¡No hay registros de Asignaturas en tu lista! ¡Agrega una! </b></h5></center>
-                                    				<center><a href="{% url 'agregarCurso' %}" type="button" class="btn btn-success btn-circle waves-effect waves-circle waves-float"><i class="material-icons">add</i></a></center>
+                                    				<center><h5><b>¡No hay registros de Cursos en tu lista! ¡Agrega uno! </b></h5></center>
+                                    				<center><a href="{% url 'agregarAsignatura' %}" type="button" class="btn btn-success btn-circle waves-effect waves-circle waves-float"><i class="material-icons">add</i></a></center>
                                     			{% endif %}
                                 				</tbody>
                             				</table>
-                                            <center><a href="{% url 'agregarCurso' %}" type="button" title= "Agregar Curso"class="btn bg-teal waves-effect btn-circle waves-circle waves-float"><i class="material-icons">add</i></a></center>
+                                            <center><a href="{% url 'agregarAsignatura' %}" type="button" title= "Agregar Curso"class="btn bg-teal waves-effect btn-circle waves-circle waves-float"><i class="material-icons">add</i></a></center>
                         				</div>
                         			</div>
 
@@ -74,7 +76,7 @@
                                 <div class="card">
                                     <div class="header">
                                         <h2><b>
-                                            CURSOS REGISTRADOS
+                                            Asignaturas Registradas
                                         </h2></b>
                                     </div>
                                     <div class="body">
@@ -89,19 +91,22 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                {% if curso %}
-                                                {% for curso in curso %}
+                                                {% if asignatura %}
+                                                {% for asignatura in asignatura %}
                                                     <tr>
-                                                        <th scope="row">{{curso.carrera.nombre}}</th>
-                                                        <td>{{curso.nombre}}</td>
-                                                        <td>{{curso.sigla}}</td>
+                                                        <th scope="row">{{asignatura.carrera.nombre}}</th>
+                                                        <td>{{asignatura.nombre}}</td>
+                                                        <td>{{asignatura.sigla}}</td>
                                                         <td>
-                                                           <center> <a href="" class="btn btn bg-pink btn-circle waves-effect" title="Detalle de Curso"><i class="material-icons">search</i></a></center>
+                                                           <center> 
+                                                                <a href="{% url 'detalle_general_asignatura' asignatura.pk %}" class="btn btn bg-pink btn-circle waves-effect" title="Detalle de Curso"><i class="material-icons">search</i></a>
+                                                                <a href="{% url 'agregarRA' asignatura.pk %}" class="btn btn bg-teal btn-circle waves-effect" title="Apartado - Resultados de Aprendizaje"><i class="material-icons">assignment</i></a>
+                                                           </center>
                                                         </td>
                                                     </tr>
                                                 {% endfor %}
                                                 {% else %}
-                                                    <center><h5><b>¡No hay registros de Cursos en tu lista!</b></h5></center>
+                                                    <center><h5><b>¡No hay registros de Asignaturas en tu lista de creados!</b></h5></center>
                                                 {% endif %}
                                                 </tbody>
                                             </table>

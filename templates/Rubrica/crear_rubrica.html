@@ -4,65 +4,135 @@
 
 <body class="theme-amber">
 <section class="content">
-		<div class="row clearfix">
-    		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        		<div class="card">
-
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
                     <div class="header">
                         <h2><center><b>
-                                RÚBRICA
-                                <small>Características generales</small>
+                                REGISTRAR RÚBRICA
+                                <small>Registra una rúbrica al sistema</small>
                         </h2></center></b>
                     </div>
 
-					<div class="body">
-            <div class="row clearfix">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="card">
-                        <div class="header">
-                            <h2>
-                                INLINE LAYOUT
-                                <small>With floating label</small>
-                            </h2>
-                        </div>
-                        <div class="body">
-                            <form>
-                                <div class="row clearfix">
-                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
-                                        <div class="form-group form-float">
-                                            <div class="form-line">
-                                                <input type="" class="form-control">
-                                                <label class="form-label">Nombre de Rúbrica</label>
-                                            </div>
-                                        </div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="card">
+                                    <div class="header">
+                                        <h2><b>
+                                            CREAR RÚBRICA - DOCENTE
+                                        </h2></b>
                                     </div>
-                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
-                                        <div class="form-group form-float">
-                                            <div class="form-line">
-                                                <input type="" class="form-control">
-                                                <label class="form-label">Password</label>
+
+                                    <div class="body">
+                                        <form method="POST">{% csrf_token %}
+                                            <div class="form-row">
+                                                <div class="col-md-4 mb-4">
+                                                    <label for="{{form.nombre.nombre}}">{{form.nombre.label}}</label>
+                                                    {{form.nombre}}
+                                                </div>
+                                                <div class="col-md-4 mb-4">
+                                                    <label for="{{form.tipo.tipo}}">{{form.tipo.label}}</label>
+                                                    {{form.tipo}}
+                                                </div>
+                                                <div class="col-md-5 mb-4 switch">
+                                                    <b>{{form.is_private.label}}</b> <br><br>
+                                                    <label><b>NO</b><input type="checkbox" value={{form.is_private}}> 
+                                                        <span class="lever">
+                                                        </span> 
+                                                        <b>SÍ</b>
+                                                    </label>
+                                                    {{form.is_private}}
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                        <input type="checkbox" id="remember_me_5" class="filled-in">
-                                        <label for="remember_me_5">Remember Me</label>
-                                        <button type="button" class="btn btn-primary btn-lg m-l-15 waves-effect">LOGIN</button>
+                                            <div class="form-group row">
+                                                <div class="col-sm-10">
+                                                    <button type="submit" class="btn btn-success">Agregar</button>
+                                                    <a href="{% url 'detalleCurso' pka %}" class="btn btn-danger" title="Editar información" class="btn btn-success btn-lg btn-sm">Cancelar</a>
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
+
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="card">
+                                    <div class="header">
+                                        <h2><b>
+                                            RÚBRICAS REGISTRADAS EN EL SISTEMA
+                                            <small>Rúbricas</small>
+                                        </h2></b>
+                                    </div>
+
+                                    <div class="body">
+                                        <div class="body table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Nombre</th>
+                                                        <th>Tipo</th>
+                                                        <th><center>Acciones</center></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% if rubrica %}
+                                                {% for rubrica in rubrica %}
+                                                    <tr>
+                                                        <th>{{rubrica.nombre}}</th>
+                                                        <td>{% if rubrica.is_private == True %} <b>Rúbrica Privada {% else %} Rúbrica Pública</b> {% endif %}</td>
+                                                        <td>
+                                                            <center>
+                                                            <a href="{% url 'editarRubricaGeneral' rubrica.pk %}" class="btn btn bg-blue btn-circle waves-effect" title="Editar Rúbrica"><i class="material-icons">edit</i></a>
+                                                            <a href="" data-toggle="modal" data-target="#eliminarRubrica" class="btn btn bg-red btn-circle waves-effect" title="Eliminar Rúbrica"><i class="material-icons">delete</i></a>
+
+                                                                  <!-- Elimnar Evaluacion Modal-->
+                                                                  <div class="modal fade" id="eliminarRubrica" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                    <div class="modal-dialog" role="document">
+                                                                      <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                          <h5 class="modal-title" id="exampleModalLabel">¿Estás seguro que deseas eliminar  <i>{{rubrica.nombre}}</i>?</h5>
+                                                                          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true">×</span>
+                                                                          </button>
+                                                                        </div>
+                                                                        <div class="modal-body">Selecciona el botón <b><i>'Sí'</i></b> para eliminar esta Rúbrica. De lo contrario, sólo cierra este mensaje.</div>
+                                                                        <div class="modal-footer">
+                                                                          <button class="btn btn-warning" type="submit" data-dismiss="modal">Cancelar</button>
+                                                                          <a class="btn btn-danger" href="{% url 'eliminarRubricaGeneral' rubrica.pk %}">Sí</a>
+                                                                        </div>
+                                                                      </div>
+                                                                    </div>
+                                                                  </div>
+                                                            </center>      
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                                {% else %}
+                                                    <center><h5><b>No hay Rúbricas asignadas a esta Evaluación <i class="material-icons">mood_bad</i></b></h5></center>
+                                                {% endif %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
+        </div>
 
-					</div>
 
-
-				</div>
-			</div>
-		</div>
 </section>
 </body>
+
+
 
 {% endblock %}

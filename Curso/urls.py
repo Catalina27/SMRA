@@ -19,8 +19,14 @@ urlpatterns = [
 
     #-----RÚBRICA-----
     path('cursos/docente', views.misCursos, name="misCursos"),
-    path('cursos/docente/agregar-curso', views.agregarCurso, name="agregarCurso"),
-    path('cursos/docente/asignatura/<int:pk>', views.agregarAsignatura, name="agregarAsignatura"),
-    path('cursos/docente/detalle-asignatura/<int:pk>', views.detalleAsignatura, name="detalleAsignatura"),
-
+    path('cursos/docente/agregar-asignatura', views.agregarAsignatura, name="agregarAsignatura"),
+    path('cursos/docente/asignatura/curso/<int:pk>', views.agregarCurso, name="agregarCurso"),
+    path('cursos/docente/detalle-curso/<int:pk>', views.detalleCurso, name="detalleCurso"),
+    path('cursos/docente/detalle-asignatura/<int:pk>', views.detalle_general_asignatura, name="detalle_general_asignatura"),
+    path('cursos/docente/detalle-asignatura/crear-evaluacion/<int:pk>', views.crearEvaluacion, name="crear_evaluacion"),
+    path('cursos/docente/detalle-asignatura/editar-evaluacion/<int:pk>', views.editarEvaluacion, name="editarEvaluacion"),
+    path('cursos/docente/detalle-asignatura/eliminar-evaluacion/<int:pk>', views.eliminarEvaluacion, name="eliminarEvaluacion"),
+    path('cursos/docente/detalle-asignatura/agregar-alumno-curso/<slug:pk>/<int:pka>', views.agregar_alumno_a_curso, name="agregar_alumno_a_curso"),
+    path('cursos/docente/detalle-asignatura/eliminar-alumno-curso/<slug:pk>/<int:pka>', views.eliminar_alumno_a_curso, name="eliminar_alumno_a_curso"),
+  
 ]

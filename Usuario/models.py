@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from Carrera.models import Carrera
 
 
 # Create your models here.
@@ -22,12 +23,14 @@ class Persona(models.Model):
 		return self.user.username + ' - ' + self.user.email 
 
 class Alumno(models.Model):
+	carrera = models.ForeignKey(Carrera, null=True, blank=True, on_delete=models.CASCADE)
 	rut = models.CharField(max_length=13, null=False, blank=False, primary_key=True)
 	nombre = models.CharField(max_length=100, null=False, blank=False)
 	apellido_pat = models.CharField(max_length=50, null=False, blank=False)
 	apellido_mat = models.CharField(max_length=50, null=False, blank=False)
 	mail = models.EmailField(null=False, blank=True)
 	telefono = models.IntegerField(null=True, blank=True)
+	user = models.ForeignKey(User,null=True, blank=True, on_delete=models.CASCADE)
 
 	def __str__(self):
 		return str(self.rut) + " - " + self.nombre + " " + self.apellido_pat + " " + self.apellido_mat

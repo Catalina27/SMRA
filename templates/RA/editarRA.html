@@ -1,0 +1,53 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+<body class="theme-amber">
+<section class="content">
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2><center><b>
+                                EDITAR RESULTADO DE APRENDIZAJE
+                                <small>Edita el resultado de aprendizaje en el sistema</small>
+                        </h2></center></b>
+                    </div>
+
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="card">
+                                    <div class="header">
+                                        <h2><b>
+                                            EDITAR RA - DOCENTE
+                                        </h2></b>
+                                    </div>
+
+                                    <div class="body">
+                                        <form method="POST">{% csrf_token %}
+                                            <div class="form-row">
+                                                <div class="col-md-3 mb-3">
+                                                    <label for="{{form.codigo.codigo}}">{{form.codigo.label}}</label>
+                                                    {{form.codigo}}
+                                                </div>
+                                                <div class="col-md-8 mb-8">
+                                                    <label for="{{form.nombre.nombre}}">{{form.nombre.label}}</label>
+                                                    {{form.nombre}}
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-sm-10">
+                                                    <button type="submit" class="btn btn-info">Editar</button>
+                                                    <a href="{% url 'agregarRA' ra.asignatura.pk %}" class="btn btn-danger" title="Editar información" class="btn btn-success btn-lg btn-sm">Cancelar</a>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+{% endblock %}

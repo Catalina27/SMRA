@@ -9,8 +9,8 @@
         		<div class="card">
                     <div class="header">
                         <h2><center><b>
-                                AGREGAR CURSO
-                                <small>Registra un curso en el sistema</small>
+                                ACTIVAR ASIGNATURA COMO CURSO
+                                <small>Registra esta asignatura como curso</small>
                         </h2></center></b>
                     </div>
 
@@ -20,25 +20,24 @@
                     			<div class="card">
                         			<div class="header">
                             			<h2><b>
-                                			ASIGNATURA - DOCENTE
+                                			ACTIVAR A CURSO - DOCENTE
                             			</h2></b>
                         			</div>
-
                         			<div class="body">
               							<form method="POST">{% csrf_token %}
                 							<div class="form-row">
                                 				<div class="col-md-4 mb-4">
-                    								<label for="{{form.nombre.nombre}}">{{form.nombre.label}}</label>
-                      								{{form.nombre}}
+                    								<label for="{{form.semestre.semestre}}">{{form.semestre.label}}</label>
+                      								{{form.semestre}}
                     							</div>
                     							<div class="col-md-4 mb-4">
-                    								<label for="{{form.sigla.sigla}}">{{form.sigla.label}}</label>
-                      								{{form.sigla}}
+                    								<label for="{{form.anio.anio}}">{{form.anio.label}}</label>
+                      								{{form.anio}}
                     							</div>
-                    							<div class="col-md-4 mb-4 show-tick">
-                      								<label for="{{form.carrera.carrera}}">{{form.carrera.label}}</label>
-                      								{{form.carrera}}
-                    							</div>
+                                  <div class="col-md-4 mb-4">
+                                    <label for="{{form.paralelo.paralelo}}">{{form.paralelo.label}}</label>
+                                      {{form.paralelo}}
+                                  </div>
                   							</div>
                   							<div class="form-group row">
                       							<div class="col-sm-10">
@@ -53,53 +52,6 @@
             			</div>
 					</div><hr>
 
-					<div class="body">
-            			<div class="row clearfix">
-                			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    			<div class="card">
-                        			<div class="header">
-                            			<h2><b>
-                                			REGISTRAR CURSO COMO ASIGNATURA EN EL SISTEMA
-                                			<small>Cursos Registrados</small>
-                            			</h2></b>
-                        			</div>
-
-                        			<div class="body">
-                        				<div class="body table-responsive">
-                            				<table class="table table-bordered">
-                                				<thead>
-                                    				<tr>
-                                        				<th>Carrera</th>
-                                        				<th>Sigla</th>
-                                                        <th>Curso</th>
-                                                        <th><center>¿Desea activar curso a Asignatura?</center></th>
-                                    				</tr>
-                                				</thead>
-                                				<tbody>
-                                				{% if cursos %}
-                                				{% for cursos in cursos %}
-                                    				<tr>
-                                        				<th>{{cursos.carrera.nombre}}</th>
-                                                        <td>{{cursos.sigla}}</td>
-                                        				<td>{{cursos.nombre}}</td>
-                                        				<td>
-                        									<center><a href="{% url 'agregarAsignatura' cursos.pk %}" class="btn btn bg-purple waves-effect" title="Editar información" class="btn btn-success btn-lg btn-sm">Aceptar</a></center>
-                                        				</td>
-                                    				</tr>
-                                    			{% endfor %}
-                                    			{% else %}
-                                    				<center><h5><b>No hay registros de Cursos para registrar Asignaturas <i class="material-icons">mood_bad</i></b></h5></center>
-                                    			{% endif %}
-                                				</tbody>
-                            				</table>
-                        				</div>
-                        			</div>
-
-                    			</div>
-               	 			</div>
-            			</div>
-					</div>
-
 				</div>
 			</div>
 		</div>
@@ -107,7 +59,6 @@
 
 </section>
 </body>
-
 
 
 {% endblock %}
