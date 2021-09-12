@@ -23,6 +23,11 @@
                                             CREAR RÚBRICA - DOCENTE
                                         </h2></b>
                                     </div>
+                                    <div class="body">
+                                        <p>
+                                            Evaluación: <b>{{evaluacion.nombre}} - %{{evaluacion.ponderacion}}</b><br>                                           
+                                        </p>
+                                    </div>
 
                                     <div class="body">
                                         <form method="POST">{% csrf_token %}
@@ -49,6 +54,7 @@
                                                 <div class="col-sm-10">
                                                     <button type="submit" class="btn btn-success">Agregar</button>
                                                     <a href="{% url 'detalleCurso' pka %}" class="btn btn-danger" title="Editar información" class="btn btn-success btn-lg btn-sm">Cancelar</a>
+                                                    <a href="{% url 'detalleCurso' pka %}" class="btn btn-warning" title="Editar información" class="btn btn-success btn-lg btn-sm">Regresar</a>
                                                 </div>
                                             </div>
                                         </form>

@@ -61,6 +61,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Nombre</th>
+                                                        <th><center>Estado</center></th>
                                                         <th><center>Acciones</center></th>
                                                     </tr>
                                                 </thead>
@@ -70,7 +71,19 @@
                                                     <tr>
                                                         <th>{{aspectos.nombre}}</th>
                                                         <td><center>
-                                                            <a href="" class="btn btn bg-orange btn-circle waves-effect" title="Editar Rúbrica"><i class="material-icons">edit</i></a>
+                                                            {% if aspectos.estado == 'Sin Definir' %} 
+                                                                <a class="btn btn-warning" class="btn btn-success btn-sm"> <i class="material-icons">report_problem</i> {{aspectos.estado}}</a>
+                                                            {% else %}
+                                                                <a class="btn btn-success" class="btn btn-success btn-sm"> <i class="material-icons">done_all</i> {{aspectos.estado}}</a>
+                                                            {% endif %}
+                                                        </center></td>
+                                                        <td>
+                                                            <center>
+                                                            {% if aspectos.estado == 'Sin Definir' %} 
+                                                                <a href="{% url 'puntuarAspecto' pke pka aspectos.pk %}" class="btn btn bg-purple btn-circle waves-effect" title="Definir detalle del aspecto"><i class="material-icons">add</i></a>
+                                                            {% endif %}
+
+                                                            <a href="" class="btn btn bg-pink btn-circle waves-effect" title="Editar Aspecto"><i class="material-icons">edit</i></a>
                                                             <a href="" data-toggle="modal" data-target="#eliminarAspecto" class="btn btn bg-red btn-circle waves-effect" title="Eliminar Aspecto"><i class="material-icons">delete</i></a>
 
                                                                   <!-- Elimnar Aspecto Modal-->
@@ -99,16 +112,18 @@
                                                     <center><h5><b>No hay Aspectos asignados a esta Evaluación <i class="material-icons">mood_bad</i></b></h5></center>
                                                 {% endif %}
                                                 </tbody>
-                                            </table>
-
+                                            </table><br>
+                                            {% if estado_final == True %}
+                                                <p align="right"><a href="{% url 'rubricaFinalizada' pk pka %}" class="btn btn-success" class="btn btn bg-pink btn-sm" title="Selecciona para finalizar la rúbrica :)"> <i class="material-icons">done</i> Finalizar</a></p>
+                                            {% else %}
+                                                <p align="right"><a class="btn btn-success btn-sm" title="Faltan aspectos por definir, termínalos para Finalizar la rúbrica :)" disabled="disabled"> <i class="material-icons">done</i> Finalizar</a></p>
+                                            {% endif %}
                                         </div>
-                                        <p align="right"><a href="{% url 'puntuarAspecto' pk pka %}" type="button" class="btn bg-light-green btn-circle waves-effect waves-circle waves-float" title="Avanza para terminar"><i class="material-icons">input</i></a></p>
                                     </div>
 
                                 </div>
                             </div>
                         </div>
-                      <!--  <p align="right"><a href="" type="button" class="btn bg-light-green btn-circle waves-effect waves-circle waves-float" title="Avanza para determinar los puntajes asociados"><i class="material-icons">keyboard_arrow_right</i></a></p> -->
                     </div>
                 </div>
             </div>

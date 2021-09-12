@@ -96,47 +96,65 @@ def register(request):
 	return render(request, 'registration/prueba.html',context)
 
 
+@login_required()
 def cargaManualAlumno(request,pka):
 
-	alumno = Alumno.objects.filter(user=request.user.id)
+    alumno = Alumno.objects.filter(user=request.user.id)
 
-	if request.method == "POST":
-		form = AlumnoForm(request.POST)
-		if form.is_valid():
-			alumno = form.save(commit=False)
-			alumno.user = User.objects.get(pk=request.user.id)
-			alumno.save()
-			return redirect('agregarAlumnoManual',pka)
-	else:
-			form = AlumnoForm()
-	return render (request, 'Alumno/ingresoAlumnoManual.html',{'form':form,'alumno':alumno,'pka':pka})
+    if request.method == "POST":
+        form = AlumnoForm(request.POST)
+        if form.is_valid():
+            alumno = form.save(commit=False)
+            alumno.user = User.objects.get(pk=request.user.id)
+            alumno.save()
+            return redirect('agregarAlumnoManual',pka)
+    else:
+            form = AlumnoForm()
+
+    #TIPO DE USUARIO
+    current_user = request.user
+    usuario = Persona.objects.get(user=current_user.id)
+    return render (request, 'Alumno/ingresoAlumnoManual.html',{'form':form,'alumno':alumno,'pka':pka,'usuario':usuario})
 
 
+@login_required()
 def editarAlumno(request,pk,ide):
-	curso = Curso.objects.get(pk=ide)
-	alumno = Alumno.objects.get(pk=pk)
-	form = AlumnoForm(request.POST or None, instance=alumno)
-	if form.is_valid():
-		form.save()
-		messages.success(request, 'Se ha editado la información correctamente')
-		return redirect('agregarAlumnoManual',ide)
-	return render(request, 'Alumno/editarAlumno.html', {'form': form, 'pk':pk,'ide':ide}) 
+    curso = Curso.objects.get(pk=ide)
+    alumno = Alumno.objects.get(pk=pk)
+    form = AlumnoForm(request.POST or None, instance=alumno)
+    if form.is_valid():
+        form.save()
+        messages.success(request, 'Se ha editado la información correctamente')
+        return redirect('agregarAlumnoManual',ide)
+
+    #TIPO DE USUARIO
+    current_user = request.user
+    usuario = Persona.objects.get(user=current_user.id)
+    return render(request, 'Alumno/editarAlumno.html', {'form': form, 'pk':pk,'ide':ide,'usuario':usuario}) 
 
 
+@login_required()
 def listadoAlumnosRegistrados(request,pka):
-	alumnos = Alumno.objects.filter(user=request.user.id)
-	alumno_en_curso = Asignatura_alumnos.objects.filter(alumno__user=request.user.id, curso=pka)
+    alumnos = Alumno.objects.filter(user=request.user.id)
+    alumno_en_curso = Asignatura_alumnos.objects.filter(alumno__user=request.user.id, curso=pka)
 
-	return render (request, 'Alumno/listadoAlumnosRegistrados.html',{'alumnos':alumnos,'pka':pka,'alumno_en_curso':alumno_en_curso})
+    #TIPO DE USUARIO
+    current_user = request.user
+    usuario = Persona.objects.get(user=current_user.id)
+    return render (request, 'Alumno/listadoAlumnosRegistrados.html',{'alumnos':alumnos,'pka':pka,'alumno_en_curso':alumno_en_curso,'usuario':usuario})
 
 
+@login_required()
 def fichaAcademica(request,pk,pka):
 
-	alumno = Alumno.objects.get(pk=pk)
-	evaluaciones = Evaluacion.objects.filter(curso=pka)
-	curso = Curso.objects.get(pk=pka)
+    alumno = Alumno.objects.get(pk=pk)
+    evaluaciones = Evaluacion.objects.filter(curso=pka)
+    curso = Curso.objects.get(pk=pka)
 
-	return render (request,'Alumno/fichaAcademica.html', {'alumno':alumno,'evaluaciones':evaluaciones,'curso':curso,'pka':pka})
+    #TIPO DE USUARIO
+    current_user = request.user
+    usuario = Persona.objects.get(user=current_user.id)
+    return render (request,'Alumno/fichaAcademica.html', {'alumno':alumno,'evaluaciones':evaluaciones,'curso':curso,'pka':pka,'usuario':usuario})
 
 #FUNCIÓN QUE DESCARGA LA PLANTILLA QUE SERÁ LLENADA PARA CARGAR A LOS ALUMNOS
 
@@ -232,7 +250,10 @@ def subir_plantilla_alumnos(request,pk):
     else:
         form = Archivo_form()
 
-    return render (request,'Alumno/subir_plantilla_alumnos.html',{'pk':pk,'form':form})
+    #TIPO DE USUARIO
+    current_user = request.user
+    usuario = Persona.objects.get(user=current_user.id)
+    return render (request,'Alumno/subir_plantilla_alumnos.html',{'pk':pk,'form':form,'usuario':usuario})
 
 
 # CARGAR DATOS PLANTILLA INGRESADA

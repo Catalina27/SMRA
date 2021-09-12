@@ -44,7 +44,13 @@
                                                         <th>Tipo</th>
                                                         <th>% Ponderación</th>
                                                         <th>Carácter</th>
-                                                        {% if rubrica%}{% for rubrica in rubrica %}<th>Rúbrica Asociada</th>{% endfor %}{% endif %}
+                                                        {% if rubrica%}
+                                                            {% for rubrica in rubrica %}
+                                                            <th><center>Rúbrica Asociada</center></th>
+                                                            {% endfor %}
+                                                        {% else %}
+                                                            <th><center>Rúbrica Asociadas</center></th>
+                                                        {% endif %}
                                                         <th><center>Estado Rúbrica</center></th>
                                                         <th><center>Acciones</center></th>
                                                     </tr>
@@ -57,17 +63,67 @@
                                                         <td>{{evaluaciones.tipo.nombre}}</td>
                                                         <td>{{evaluaciones.ponderacion}}</td>
                                                         <td>{% if evaluaciones.is_grupal == True %} Grupal {% else %} Individual {% endif %}</td>
-            {% if rubrica %}{% for rubrica in rubrica %}<td>{{rubrica.nombre}}</td>
-                                                        <td><center><a class="btn {% if rubrica.estado.nombre == 'No Iniciada' %} btn-danger" href="{% url 'llenarRubrica' rubrica.pk %}" {% else %} btn-success" href=""{% endif %}">{{rubrica.estado.nombre}}</a></center></td>{% endfor %}{% endif %}
+                                                        
+                                                        <td>
+                                                            <center>
+                                                            {% if rubrica %}
+                                                                {% for rubrica in rubrica %}
+                                                                    {% if evaluaciones.id == rubrica.evaluacion.id %}
+                                                                        {{rubrica.nombre}} {{evaluaciones.id}}
+                                                                    {% else %}
+                                                                        <b>No existen registros</b>
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                            {% else %}
+                                                                <b>No existen registros</b>
+                                                            {% endif %}
+                                                            </center>
+                                                        </td>
+                                                        <td>
+                                                            <center>
+                                                        {% if rubrica %}
+                                                        {% for rubrica in rubrica %}  
+                                                        {% if evaluaciones.id == rubrica.evaluacion.id %}
+
+                                                            {% if rubrica.estado.nombre == 'No Iniciada' %}
+                                                                <a class="btn btn-danger" href="{% url 'llenarRubrica' rubrica.pk %}">{{rubrica.estado.nombre}}</a>
+                                                            {% endif %}
+
+                                                            {% if rubrica.estado.nombre == 'En Proceso' %}
+                                                                <a class="btn btn-warning" href="{% url 'crearAspecto' rubrica.pk %}">{{rubrica.estado.nombre}}</a>
+                                                            {% endif %}
+
+                                                            {% if rubrica.estado.nombre == 'Finalizada' %}
+                                                                <a class="btn btn-success" href="{% url 'rubricaFinalizada' rubrica.pk pka %}">{{rubrica.estado.nombre}}</a>
+                                                            {% endif %}
+
+                                                            {% if rubrica.estado.nombre == 'Activa' %}
+                                                                <a class="btn btn-primary" href="">{{rubrica.estado.nombre}}</a>
+                                                            {% endif %}
+
+                                                        {% else %}
+                                                            <b>No existen registros</b>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                        {% else %}
+                                                            <b>No existen registros</b>
+                                                        {% endif %}
+                                                            </center>
+                                                        </td>
                                                         <td>
                                                             <center>
                                                                 {% if rubrica %}
-                                                                {% for rubrica in rubrica %}
-                                                                <a href="{% url 'verRubricaGeneral' rubrica.pk pk %}" class="btn btn bg-orange btn-circle waves-effect" title="Ver Rúbricas Asociadas"><i class="material-icons">search</i></a>
-                                                                {% endfor %}
+                                                                    {% for rubrica in rubrica %}
+                                                                        {% if evaluaciones.id == rubrica.evaluacion.id %}
+                                                                            <a href="{% url 'verRubricaGeneral' rubrica.pk pk %}" class="btn btn bg-orange btn-circle waves-effect" title="Ver Rúbricas Asociadas"><i class="material-icons">search</i></a>
+                                                                        {% else %}
+                                                                            <a href="{% url 'crearRubrica' evaluaciones.pk pka %}" class="btn btn bg-light-green btn-circle waves-effect" title="Agregar Rúbrica"><i class="material-icons">add</i></a>
+                                                                        {% endif %}
+                                                                    {% endfor %}
                                                                 {% else %}
-                                                                <a href="{% url 'crearRubrica' evaluaciones.pk pka %}" class="btn btn bg-light-green btn-circle waves-effect" title="Agregar Rúbrica"><i class="material-icons">add</i></a>
+                                                                    <a href="{% url 'crearRubrica' evaluaciones.pk pka %}" class="btn btn bg-light-green btn-circle waves-effect" title="Agregar Rúbrica"><i class="material-icons">add</i></a>
                                                                 {% endif %}
+                                                                
                                                                 <a href="{% url 'editarEvaluacion' evaluaciones.pk %}" class="btn btn bg-blue btn-circle waves-effect" title="Editar Evaluación"><i class="material-icons">edit</i></a>
                                                                 <a href="" data-toggle="modal" data-target="#eliminarEvaluacion" class="btn btn bg-red btn-circle waves-effect" title="Eliminar Evaluación"><i class="material-icons">delete</i></a>
 
@@ -103,7 +159,7 @@
                                 				</tbody>
                             				</table>
                                             <center>
-                                                <a href="{% url 'crear_evaluacion' curso.pk %}" type="button" class="btn bg-pink btn-circle waves-effect waves-circle waves-float" title="Carga de alumnos manual"><i class="material-icons">add</i></a>
+                                                <a href="{% url 'crear_evaluacion' curso.pk %}" type="button" class="btn bg-pink btn-circle waves-effect waves-circle waves-float"  {% if suma == 100 %} title="No puedes agregar más evaluaciones ya que cumpliste con el 100% de porcentaje de ponderación en tu curso :(" disabled="disabled" {% else %} title="Carga de alumnos manual" {% endif%}><i class="material-icons">add</i></a>
                                             </center>
                         				</div>
 

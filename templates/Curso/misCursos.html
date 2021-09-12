@@ -61,7 +61,7 @@
                                     			{% endif %}
                                 				</tbody>
                             				</table>
-                                            <center><a href="{% url 'agregarAsignatura' %}" type="button" title= "Agregar Curso"class="btn bg-teal waves-effect btn-circle waves-circle waves-float"><i class="material-icons">add</i></a></center>
+                                           {% if usuario.tipo_usuario.nombre == 'Administrador' %} <center><a href="{% url 'agregarAsignatura' %}" type="button" title= "Agregar Curso"class="btn bg-teal waves-effect btn-circle waves-circle waves-float"><i class="material-icons">add</i></a></center>{% endif %}
                         				</div>
                         			</div>
 

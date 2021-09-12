@@ -26,6 +26,8 @@ urlpatterns = [
     path('cursos/docente/rubrica-general/llenar-rubrica/<int:pk>', views.llenarRubrica, name="llenarRubrica"),
     path('cursos/docente/rubrica-general/llenar-rubrica/crear-aspecto/<int:pk>', views.crearAspecto, name="crearAspecto"),
     path('cursos/docente/rubrica-general/llenar-rubrica/eliminar-aspecto/<int:pk>', views.eliminarAspecto, name="eliminarAspecto"),
-    path('cursos/docente/rubrica-general/llenar-rubrica/crear-aspecto/puntuar-aspecto/<int:pk>/<int:pka>', views.puntuarAspecto, name="puntuarAspecto"),
+    path('cursos/docente/rubrica-general/llenar-rubrica/crear-aspecto/puntuar-aspecto/<int:pke>/<int:pka>/<int:pk>', views.puntuarAspecto, name="puntuarAspecto"),
+    path('cursos/docente/rubrica/review/<int:pk>/<int:pka>', views.rubricaFinalizada, name="rubricaFinalizada"),
+    path('cursos/docente/rubrica/review/descarga_rubrica_pdf/<int:pk>', views.descarga_rubrica_pdf, name="descarga_rubrica_pdf"),
     path('cursos/docente/rubricas/<int:pk>', views.misRubricas, name="misRubricas"),
 ]

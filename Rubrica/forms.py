@@ -47,15 +47,12 @@ class PuntajeForm(forms.ModelForm):
 		model = Puntaje
 		fields = [
 			'descripcion',
-			'calificacion',
 		]
 		labels = {
 			'descripcion': 'Descripción:',
-			'calificacion': 'Calificación:',
 		}
 		widgets = {
 			'descripcion': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: Cumple las tareas asignadas en los plazos requeridos'}),
-			'calificacion': forms.Select(attrs={'class': 'form-control'}),
 		}
 
 

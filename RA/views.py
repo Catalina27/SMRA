@@ -51,11 +51,11 @@ from datetime import datetime
 
 from .models import RA
 from .forms import RAform
-from Usuario.models import Alumno
+from Usuario.models import Alumno, Persona
 from Curso.models import Curso, Evaluacion, Asignatura
 from django.contrib.auth.models import AbstractUser, User
 
-
+@login_required()
 def agregarRA(request,pk):
 	asignatura = get_object_or_404(Asignatura, pk=pk)
 	ras = RA.objects.filter(asignatura=pk)
@@ -71,9 +71,13 @@ def agregarRA(request,pk):
 	else:
 		form = RAform()
 
-	return render (request, 'RA/agregarRA.html', {'form':form,'ras':ras,'pka':pk})
+	#TIPO DE USUARIO
+	current_user = request.user
+	usuario = Persona.objects.get(user=current_user.id)
+	return render (request, 'RA/agregarRA.html', {'form':form,'ras':ras,'pka':pk,'usuario':usuario})
 
 
+@login_required()
 def eliminarRA(request,pk):
 
 	ra = RA.objects.get(pk=pk)
@@ -82,6 +86,7 @@ def eliminarRA(request,pk):
 	return redirect ('agregarRA',ra.asignatura.pk)
 
 
+@login_required()
 def editarRA(request,pk,pka):
 	ra = RA.objects.get(pk=pk)
 
@@ -94,4 +99,7 @@ def editarRA(request,pk,pka):
 			form.save()
 		return redirect('agregarRA', ra.asignatura.pk)
 
-	return render(request, 'RA/editarRA.html', {'form':form,'ra':ra})
+	#TIPO DE USUARIO
+	current_user = request.user
+	usuario = Persona.objects.get(user=current_user.id)
+	return render(request, 'RA/editarRA.html', {'form':form,'ra':ra,'usuario':usuario})

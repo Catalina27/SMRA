@@ -57,17 +57,23 @@ from Rubrica.models import Rubrica
 
 # Create your views here.
 
+@login_required()
 def misCursos(request):
 	current_user = request.user
 	usuario = Persona.objects.get(user=current_user.id)
 	tipo_usuario = usuario.tipo_usuario
 
-	curso = Curso.objects.filter(anio='2021')
+	curso = Curso.objects.filter(anio='2021',semestre='2')
 	asignatura = Asignatura.objects.all()
 	rubricas = Rubrica.objects.all()
-	return render (request, 'Curso/misCursos.html',{'usuario':usuario, 'tipo_usuario':tipo_usuario, 'curso':curso, 'asignatura':asignatura})
+
+	#TIPO DE USUARIO
+	current_user = request.user
+	usuario = Persona.objects.get(user=current_user.id)
+	return render (request, 'Curso/misCursos.html',{'usuario':usuario, 'tipo_usuario':tipo_usuario, 'curso':curso, 'asignatura':asignatura,'usuario':usuario})
 
 
+@login_required()
 def agregarAsignatura(request):
 	cursos = Curso.objects.filter(profesor=request.user.id)
 	asignaturas = Asignatura.objects.filter(autor=request.user.id)
@@ -90,9 +96,14 @@ def agregarAsignatura(request):
 			return redirect('agregarAsignatura')
 	else:
 			form = AsignaturaForm()
-	return render (request, 'Curso/agregarAsignatura.html', {'form':form, 'cursos':cursos,'cursoList':cursoList})
+
+	#TIPO DE USUARIO
+	current_user = request.user
+	usuario = Persona.objects.get(user=current_user.id)
+	return render (request, 'Curso/agregarAsignatura.html', {'form':form, 'cursos':cursos,'cursoList':cursoList,'usuario':usuario})
 
 
+@login_required()
 def agregarCurso(request,pk):
 	asignatura = get_object_or_404(Asignatura, pk=pk)
 	print(asignatura)
@@ -109,9 +120,14 @@ def agregarCurso(request,pk):
 	else:
 		form = CursoForm()
 		print('no se creó')
-	return render (request, 'Curso/agregarCurso.html', {'form':form})
+
+	#TIPO DE USUARIO
+	current_user = request.user
+	usuario = Persona.objects.get(user=current_user.id)
+	return render (request, 'Curso/agregarCurso.html', {'form':form,'usuario':usuario})
 
 
+@login_required()
 def detalleCurso(request,pk):
 	suma = 0
 
@@ -120,20 +136,31 @@ def detalleCurso(request,pk):
 
 	print(suma)
 
+	rubrica = []
 	curso = Curso.objects.get(pk=pk)
 	evaluaciones = Evaluacion.objects.filter(curso=pk)
 	alumno = Asignatura_alumnos.objects.filter(curso=pk)
-	rubrica = Rubrica.objects.raw('SELECT * FROM "Rubrica_rubrica" as rubrica JOIN "Curso_evaluacion" as evaluacion ON rubrica.curso_id = evaluacion.curso_id WHERE rubrica.curso_id = ' + str(pk) + ';')
+	
+	for evaluacion in Evaluacion.objects.filter(curso=pk):
+		rubrica = Rubrica.objects.raw('SELECT * FROM "Rubrica_rubrica" as rubrica JOIN "Curso_evaluacion" as evaluacion ON rubrica.curso_id = evaluacion.curso_id WHERE rubrica.curso_id = ' + str(pk) + ' AND evaluacion.id = ' + str(evaluacion.pk) + ';')
+	
+	#TIPO DE USUARIO
+	current_user = request.user
+	usuario = Persona.objects.get(user=current_user.id)
+	return render(request, 'Curso/detalleCurso.html', {'usuario':usuario,'curso':curso,'pk':pk, 'pka':pk,'evaluaciones':evaluaciones,'suma':suma,'alumno':alumno,'rubrica':rubrica})
 
-	return render(request, 'Curso/detalleCurso.html', {'curso':curso,'pk':pk, 'pka':pk,'evaluaciones':evaluaciones,'suma':suma,'alumno':alumno,'rubrica':rubrica})
 
-
+@login_required()
 def detalle_general_asignatura(request,pk):
 	asignatura = Asignatura.objects.get(pk=pk)
 
-	return render(request, 'Curso/detalle_general_asignatura.html', {'asignatura':asignatura,'pk':pk})
+	#TIPO DE USUARIO
+	current_user = request.user
+	usuario = Persona.objects.get(user=current_user.id)
+	return render(request, 'Curso/detalle_general_asignatura.html', {'asignatura':asignatura,'pk':pk,'usuario':usuario})
 
 
+@login_required()
 def crearEvaluacion(request,pk):
 	curso = Curso.objects.get(pk=pk)
 	evaluaciones = Evaluacion.objects.filter(curso=pk)
@@ -147,9 +174,14 @@ def crearEvaluacion(request,pk):
 			return redirect('crear_evaluacion',pk)
 	else:
 			form = EvaluacionForm()
-	return render (request, 'Evaluacion/crear_evaluacion.html', {'form':form, 'evaluaciones':evaluaciones,'pk':pk})
+
+	#TIPO DE USUARIO
+	current_user = request.user
+	usuario = Persona.objects.get(user=current_user.id)
+	return render (request, 'Evaluacion/crear_evaluacion.html', {'form':form, 'evaluaciones':evaluaciones,'pk':pk,'usuario':usuario})
 
 
+@login_required()
 def editarEvaluacion(request,pk):
 	evaluacion = Evaluacion.objects.get(pk=pk)
 
@@ -161,9 +193,13 @@ def editarEvaluacion(request,pk):
 			form.save()
 		return redirect('detalleCurso', evaluacion.curso.pk)
 
-	return render(request, 'Evaluacion/editarEvaluacion.html', {'form':form,'evaluacion':evaluacion})
+	#TIPO DE USUARIO
+	current_user = request.user
+	usuario = Persona.objects.get(user=current_user.id)
+	return render(request, 'Evaluacion/editarEvaluacion.html', {'form':form,'evaluacion':evaluacion,'usuario':usuario})
 
 
+@login_required()
 def eliminarEvaluacion(request,pk):
 
 	evaluacion = Evaluacion.objects.get(pk=pk)
@@ -174,6 +210,7 @@ def eliminarEvaluacion(request,pk):
 
 ####################### AGREGAR ALUMNO AL CURSO #####################
 
+@login_required()
 def agregar_alumno_a_curso(request,pk,pka):
 
 	alumno = Alumno.objects.get(pk=pk) #obtengo el alumno
@@ -185,6 +222,7 @@ def agregar_alumno_a_curso(request,pk,pka):
 	return redirect('listadoAlumnosRegistrados',pka)
 
 
+@login_required()
 def eliminar_alumno_a_curso(request,pk,pka):
 
 	alumno = Asignatura_alumnos.objects.get(alumno=pk) #obtengo el alumno

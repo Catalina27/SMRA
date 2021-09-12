@@ -38,6 +38,7 @@ class Rubrica(models.Model):
 class Topico(models.Model):
 	nombre = models.CharField(max_length=400, null=True, blank=True)
 	rubrica = models.ForeignKey(Rubrica, null=True, blank=True, on_delete=models.CASCADE)
+	estado = models.CharField(max_length=20,null=False, blank=False,default='Sin Definir')
 
 	def __str__(self):
 		return self.nombre
@@ -45,6 +46,7 @@ class Topico(models.Model):
 
 class Calificacion_aspecto(models.Model):
 	nombre = models.CharField(max_length=15, null=True, blank=True)
+	flag = models.BooleanField(default=True)
 
 	def __str__(self):
 		return self.nombre
@@ -57,7 +59,7 @@ class Puntaje(models.Model):
 	topico = models.ForeignKey(Topico,null=True, blank=True, on_delete=models.CASCADE)
 
 	def __str__(self):
-		return str(self.topico.nombre + ' ' + self.calificacion.nombre)
+		return str(self.topico.nombre)
 
 class Topico_rubricas(models.Model):
 	rubrica = models.ForeignKey(Rubrica, null=True, blank=True, on_delete=models.CASCADE)

@@ -53,6 +53,7 @@ from .models import Contenido
 from Usuario.models import Persona
 # Create your views here.
 
+@login_required()
 def index(request):
 	current_user = request.user
 	print(current_user)

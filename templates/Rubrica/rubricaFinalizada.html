@@ -1,0 +1,126 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+                                             
+<body class="theme-amber">
+<section class="content">
+		<div class="row clearfix">
+    		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        		<div class="card">
+
+                    <div class="header">
+                        <h2><center><b>
+                                MIS RÚBRICAS
+                                <small>Detalle de rúbrica <b><i>{{rubrica.nombre}}</i></b></small>
+                        </h2></center></b>
+                    </div>
+
+					<div class="body">
+            			<div class="row clearfix">
+                			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    			<div class="card">
+                        			<div class="header">
+                            			<h2><b>
+                                			DETALLE GENERAL DEL CURSO
+                            			</h2></b>
+                        			</div>
+                        			<div class="body">
+                                        <p>
+                                            Carrera: <b>{{curso.asignatura.carrera.nombre}}</b><br>
+                                            Curso: <b> <i>{{curso.asignatura.sigla}}</i> - {{curso.asignatura.nombre}}</b><br>
+                                            Evaluacion: <b>{{rubrica.evaluacion.nombre}}</b><br>                                           
+                                        </p><br>
+
+                                        <h4><b>
+                                            <center><p>{{rubrica.nombre}}</p></center>
+                                        </h4></b>
+
+                                    <div class="body">
+                                        <div class="body table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Carácter</th>
+                                                        <th>Tipo</th>
+                                                        <th>% Ponderación</th>
+                                                        <th>Carácter</th>
+                                                        <th><center>Estado Rúbrica</center></th>
+                                                        <th><center>Acciones</center></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% if rubrica %}
+                                                    <tr>
+                                                        <td>{{rubrica.nombre}}</td>
+                                                        <td>{% if rubrica.is_private == True %} Privada {% else %} Pública {% endif %}</td>
+                                                        <td>{{rubrica.tipo.nombre}}</td>
+                                                        <td>{{rubrica.evaluacion.ponderacion}}</td>
+                                                        <td><center><b>{{rubrica.estado}}</b></center></td>
+                                                        <td>
+                                                            <center>
+                                                                <a href="{% url 'descarga_rubrica_pdf' pk %}" type="button" class="btn bg-green btn-circle waves-effect waves-circle waves-float" title="Carga de alumnos manual"><i class="material-icons">cloud_download</i></a>
+                                                            </center>
+                                                        </td>
+                                                    </tr>
+                                                {% else %}
+                                                    <center><h5><b>¡No hay registros de Evaluaciones en este curso! </b></h5></center>
+                                                {% endif %}
+                                				</tbody>
+                            				</table>
+                        				</div>
+
+                        			</div>
+
+                                        <h4><b>
+                                            <center><p>Detalle Rúbrica</p></center>
+                                        </h4></b>
+
+                                    <div class="body">
+                                        <div class="body table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Aspecto</th>
+                  {% for calificacion in calificacion %}<th>
+                                                            <center>({{calificacion.id}}) {{calificacion.nombre}}</center>
+                                                        </th>
+                    {% endfor %}
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% if aspectos %}
+                                                {% for aspectos in aspectos %}
+                                                    <tr>
+                                                        <td><b>{{aspectos.nombre}}</b></td>
+                                                        {% if puntajes %}
+                                                        {% for puntajes in puntajes %}
+                                                        {% if puntajes.topico.nombre == aspectos.nombre %}
+                                                        <td>{{puntajes.descripcion}}</td>
+                                                        {% endif %}
+                                                        {% endfor %}                         
+                                                        {% endif %} 
+                                                    </tr>
+                                                {% endfor %}
+                                                {% else %}
+                                                    <center><h5><b>¡No hay registros de Evaluaciones en este curso! </b></h5></center>
+                                                {% endif %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <p align="right"><a href="" class="btn btn-success" class="btn btn bg-pink btn-sm" title="Selecciona para finalizar la rúbrica :)"> <i class="material-icons">done</i> Finalizar</a></p>
+                                    </div>
+
+                    			</div>
+               	 			</div>
+            			</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</section>
+</body>
+
+
+
+{% endblock %}
