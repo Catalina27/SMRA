@@ -1,0 +1,49 @@
+agregar en tipo de evaluación
+	- sumativa
+
+Nota Presentación = NAI * 0,15 + NEI * 0,1 + NP * 0,50 + NSW * 0,25
+NAI: Nota actividades Inglés
+NEI: Nota Evaluación Inicial 
+NP: Nota proyecto (Presentación Tema 5%, Avance 15%, Final 30%) (*)
+NSW: Nota SW (Plan de pruebas 10%, Revisión SW 15%) (*)
+
+AI ---> Actividades de Inglés ---> actividades tipo sumativas - varias (15%)
+EI ---> Trabajo introductorio ---> separado en presentación oral y trabajo escrito (10%)
+Presentación Tema ---> 5% 
+				  ---> separado en presentación oral (3,5)
+				  		---> presentación oral español (1,75)
+				  		---> presentación oral inglés (1,75)
+				  	   trabajo escrito (1.5)
+
+Avance ---> 15% -----> Informe de Avance (7,5)
+				-----> la presentación de avance (7,5)
+
+Final ----> 30% -----> Informe de Avance (15%) 
+					   presentacion oral español (10,5%)
+					   presentacion oral ingles (4,5%)
+-----------------------SW---------------------------
+SW Plan de pruebas (10%)
+SW Revisión SW (15%)
+
+
+
+EI ---> Trabajo introductorio ---> separado en presentación oral y trabajo escrito (10%)
+	***** RA1 - RA2 *******
+
+
+Presentación Tema ---> 5% 
+				  ---> separado en presentación oral (3,5)
+				  		---> presentación oral español (1,75)  ---> **** RA1 ****
+				  		---> presentación oral inglés (1,75)  ----> **** RA1 ****
+				  	   trabajo escrito (1.5)   ----> **** RA1 - RA2 ****
+
+Avance ---> 15% -----> Informe de Avance (7,5)  ----> ******* RA1 - RA2 - RA3 ******
+				-----> la presentación de avance (7,5)   -----> ****** RA1 - RA2 - RA3 *****
+
+Final ----> 30% -----> Informe de Avance (15%)  ----> **** RA1 - RA2 - RA3 - RA4 ****
+					   presentacion oral español (10,5%) ----> **** RA1 - RA2 *****
+					   presentacion oral ingles (4,5%) -----> **** RA1 -RA2 *****
+					   
+-----------------------SW---------------------------
+SW Plan de pruebas (10%) ----> **** RA1 - RA2 - RA3 - RA4 ***
+SW Revisión SW (15%) ----> **** RA1 - RA2 - RA3 - RA4 ***

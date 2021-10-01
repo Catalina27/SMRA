@@ -1,0 +1,113 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+<body class="theme-amber">
+<section class="content">
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2><center><b>
+                                NOTAS ALUMNO - {{evaluacion.nombre}}
+                                <small>Descarga el excel y rellena las notas de los alumnos para cargarlas al sistema</small>
+                        </h2></center></b>
+                    </div>
+
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="header">
+                                    <h5><b>
+                                        DESCARGA LA PLANTILLA PARA SUBIR TUS NOTAS
+                                    </h5></b>
+                                    {% if evaluacion.is_grupal == True %}
+                                        <a href="{% url 'plantilla_notas_grupos_excel' evaluacion.pk pka %}" class="btn btn-success" title="DESCARGAR" class="btn btn-success btn-lg btn-sm"><i class="material-icons">cloud_download</i>  Descargar</a>
+                                    {% else %}
+                                        <a href="{% url 'plantilla_notas_alumnos_excel' evaluacion.pk pka %}" class="btn btn-success" title="DESCARGAR" class="btn btn-success btn-lg btn-sm"><i class="material-icons">cloud_download</i>  Descargar</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="card">
+                                    <div class="header">
+                                        <h2><b>
+                                            SUBE TUS NOTAS
+                                        </h2></b>
+                                    </div>
+
+                                    <div class="body">
+                                        <form method="POST" enctype="multipart/form-data">{% csrf_token %}
+                                            <div class="form-row">
+                                                <div class="col-md-8 mb-8">
+                                                    <label for="{{form.doc.doc}}">{{form.doc.label}}</label>
+                                                    {{form.doc}}
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-sm-10">
+                                                    <button type="submit" class="btn btn-primary"><i class="material-icons">cloud_upload</i> Subir Plantilla</button>
+                                                    <a href="{% url 'detalleCurso' pka %}" class="btn btn-danger" title="Editar información" class="btn btn-success btn-lg btn-sm"><i class="material-icons">cancel</i> Cancelar</a>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br>
+
+                                        <h4><b>
+                                            <center>NOTAS INGRESADAS </center>
+                                        </h4></b>
+
+                                        <div class="body table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>RUT</th>
+                                                        <th>Nombre</th>
+                                                        <th>Teléfono</th>
+                                                        <th>Mail</th>
+                                                        <th>Nota {{evaluacion.nombre}}</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% if notas %}
+                                                {% for notas in notas %}
+                                                    <tr>
+                                                        <td>{{notas.alumno.rut}}</td>
+                                                        <td>{{notas.alumno.nombre}} {{notas.alumno.apellido_pat}} {{notas.alumno.apellido_mat}}</td>
+                                                        <td>{% if notas.alumno.telefono == None %}<b><i>Sin Registro</i></b> {% else %} {{notas.alumno.telefono}}{% endif %}</td>
+                                                        <td>{{notas.alumno.mail}}</td>
+                                                        <td><center><b>{{notas.nota}}</b></center></td>
+                                                    </tr>
+                                                {% endfor %}    
+                                                {% else %}
+                                                <center><h5><b>¡Aún no hay notas de los Alumnos! </b></h5></center>
+                                                {% endif %}
+                                                </tbody>
+                                            </table>
+                                                    <center>
+                                                        <a href="{% url 'plantilla_descargar_notas_alumnos' pk pka %}" type="button" class="btn bg-green btn-circle waves-effect waves-circle waves-float" title="Carga de alumnos en masa"><i class="material-icons">get_app</i></a>
+                                                    </center>
+                                                
+                                        </div>
+                </div>
+            </div>
+        </div>
+
+
+</section>
+</body>
+
+
+
+{% endblock %}

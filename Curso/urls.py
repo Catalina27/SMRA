@@ -28,5 +28,10 @@ urlpatterns = [
     path('cursos/docente/detalle-asignatura/eliminar-evaluacion/<int:pk>', views.eliminarEvaluacion, name="eliminarEvaluacion"),
     path('cursos/docente/detalle-asignatura/agregar-alumno-curso/<slug:pk>/<int:pka>', views.agregar_alumno_a_curso, name="agregar_alumno_a_curso"),
     path('cursos/docente/detalle-asignatura/eliminar-alumno-curso/<slug:pk>/<int:pka>', views.eliminar_alumno_a_curso, name="eliminar_alumno_a_curso"),
-  
+    path('cursos/docente/detalle-curso/notas-alumnos/<int:pk>/<int:pka>', views.notas_alumno, name="notas_alumnos"),
+    path('cursos/docente/detalle-curso/notas-alumnos/descarga-excel/<int:pk>/<int:pka>', views.plantilla_notas_alumnos_excel.as_view(), name='plantilla_notas_alumnos_excel'),
+    path('cursos/docente/detalle-curso/notas-grupos-alumnos/descarga-excel/<int:pk>/<int:pka>', views.plantilla_notas_grupos_excel.as_view(), name='plantilla_notas_grupos_excel'),
+    path('cursos/docente/detalle-curso/notas-alumnos/cargar-notas-alumnos/<int:pk>/<int:pka>', views.cargar_plantilla_notas_alumnos, name="cargar_plantilla_notas_alumnos"),
+    path('cursos/docente/detalle-curso/notas-alumnos/descargar-notas-alumnos/<int:pk>/<int:pka>', views.plantilla_descargar_notas_alumnos.as_view(), name="plantilla_descargar_notas_alumnos"),
+    path('cursos/docente/detalle-curso/notas-alumnos/descargar-notas-parciales-alumnos/<int:pka>', views.plantilla_descargar_notas_parciales_alumnos.as_view(), name="plantilla_descargar_notas_parciales_alumnos"),    
 ]

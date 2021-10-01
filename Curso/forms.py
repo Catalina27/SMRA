@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import Curso, Asignatura, Evaluacion, Evaluacion_alumnos, Archivo
+from .models import Curso, Asignatura, Evaluacion, Evaluacion_alumnos, Archivo, Archivo_notas
 
 class AsignaturaForm(forms.ModelForm):
 	
@@ -94,6 +94,20 @@ class Evaluacion_alumnoForm(forms.ModelForm):
 class Archivo_form(forms.ModelForm):
 	class Meta:
 		model = Archivo
+		fields = [
+			'doc',
+		]
+		labels = {
+			'doc': 'Sube tu archivo:',
+		}
+		widgets = {
+			'doc': forms.ClearableFileInput(attrs={'class':'form-control'}),
+		}
+
+
+class Subir_notasform(forms.ModelForm):
+	class Meta:
+		model = Archivo_notas
 		fields = [
 			'doc',
 		]

@@ -1,0 +1,148 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+<body class="theme-amber">
+<section class="content">
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2><center><b>
+                                APLICACIÓN RÚBRICA - {{rubrica.nombre}}
+                                <small>Aplica tu rúbrica</small>
+                        </h2></center></b>
+                    </div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="card">
+                                    <div class="header">
+                                        <h2><b>
+                                            ALUMNOS REGISTRADOS EN EL CURSO
+                                        </h2></b>
+                                    </div>
+
+                                    {% if evaluacion_1.is_grupal == True %}
+                                    <div class="body">
+                                        <div class="body table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="10%">Nombre</th>
+                                                        <th width="20%"><center>Estado</center></th>
+                                                        <th><center>Acciones</center></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% if grupos %}
+                                                {% for grupos in grupos %}
+                                                    <tr>
+                                                        <th>{{grupos.nombre}}</th>
+                                                        <td><center>
+                                                            {% if estado_grupo %}
+                                                            {% for estado_grupo in estado_grupo %}
+                                                            {% if estado_grupo.flag == True %}
+                                                                {% if estado_grupo.grupo.pk == grupos.pk %}
+                                                                <a class="btn btn-success" class="btn btn-success btn-sm"> <i class="material-icons">done_all</i></a>
+                                                            {% else %}
+                                                                <a class="btn btn-warning" class="btn btn-success btn-sm"> <i class="material-icons">warning</i></a>
+                                                            {% endif %}
+                                                            {% endif %}
+                                                            {% endfor %}
+                                                            {% else %}
+                                                            <a class="btn btn-warning" class="btn btn-success btn-sm"> <i class="material-icons">warning</i></a>
+                                                            {% endif %}
+                                                        </center></td>
+                                                        <td>
+                                                            <center>
+
+                                                            {% if estado_grupo %}
+                                                            {% for estado_grupo in estado_grupo %}
+                                                            {% if estado_grupo.flag == True %}
+                                                                {% if estado_grupo.grupo.pk == grupos.pk %}
+                                                                <a disabled="disabled" class="btn btn bg-red btn-circle waves-effect" title="Editar Aspecto"><i class="material-icons">edit</i></a>
+                                                            {% else %}
+                                                                <a href="{% url 'evaluarRubricaGrupo' pk pka grupos.pk %}" class="btn btn bg-red btn-circle waves-effect" title="Editar Aspecto"><i class="material-icons">edit</i></a>
+                                                            {% endif %}
+                                                            {% endif %}
+                                                            {% endfor %}
+                                                            {% else %}
+                                                            <a href="{% url 'evaluarRubricaGrupo' pk pka grupos.pk %}" class="btn btn bg-red btn-circle waves-effect" title="Editar Aspecto"><i class="material-icons">edit</i></a>
+                                                            {% endif %}
+
+                                                            </center>      
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                                {% else %}
+                                                    <center><h5><b>No hay Aspectos asignados a esta Evaluación <i class="material-icons">mood_bad</i></b></h5></center>
+                                                {% endif %}
+                                                </tbody>
+                                            </table><br>
+                                            <a href="{% url 'plantilla_evaluacion_rubrica_grupos_excel' evaluacion pka rubrica.pk puntaje_evaluacion %}" class="btn btn bg-purple btn-circle waves-effect" title="Editar Aspecto"><i class="material-icons">cloud_download</i></a>
+                                                            </center> 
+                                        </div>
+                                    </div>
+
+                                    {% else %}
+                                    <div class="body">
+                                        <div class="body table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Nombre</th>
+                                                        <th><center>Estado</center></th>
+                                                        <th><center>Acciones</center></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% if alumnos %}
+                                                {% for alumnos in alumnos %}
+                                                    <tr>
+                                                        <th>{{alumnos.alumno}}</th>
+                                                        <td><center>
+                                                            {% if alumnos.flag == True %}
+                                                                <a class="btn btn-success" class="btn btn-success btn-sm"> <i class="material-icons">done_all</i></a>
+                                                            {% else %}
+                                                                <a class="btn btn-warning" class="btn btn-success btn-sm"> <i class="material-icons">warning</i></a>
+                                                            {% endif %}
+                                                        </center></td>
+                                                        <td>
+                                                            <center>
+                                                            {% if alumnos.flag == True %}
+                                                                <a disabled="disabled" class="btn btn bg-red btn-circle waves-effect" title="Editar Aspecto"><i class="material-icons">edit</i></a>
+                                                            {% else %}
+                                                                <a href="{% url 'evaluarRubrica' pk pka alumnos.alumno.pk %}" class="btn btn bg-red btn-circle waves-effect" title="Editar Aspecto"><i class="material-icons">edit</i></a>
+                                                            {% endif %}
+                                                            </center>      
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                                {% else %}
+                                                    <center><h5><b>No hay Aspectos asignados a esta Evaluación <i class="material-icons">mood_bad</i></b></h5></center>
+                                                {% endif %}
+                                                </tbody>
+                                            </table><br>
+                                            <a href="{% url 'plantilla_evaluacion_rubrica_alumnos_excel' evaluacion pka rubrica.pk puntaje_evaluacion %}" class="btn btn bg-purple btn-circle waves-effect" title="Editar Aspecto"><i class="material-icons">cloud_download</i></a>
+                                                            </center> 
+                                        </div>
+                                    </div>
+                                    {% endif %}
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+</section>
+</body>
+
+
+
+{% endblock %}

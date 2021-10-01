@@ -1,0 +1,78 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+                                             
+<body class="theme-amber">
+<section class="content">
+		<div class="row clearfix">
+    		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        		<div class="card">
+
+                    <div class="header">
+                        <h2><center><b>
+                                MIS CURSOS
+                                <small>Cursos registrados en el sistema</small>
+                        </h2></center></b>
+                    </div>
+
+					<div class="body">
+            			<div class="row clearfix">
+                			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    			<div class="card">
+                        			<div class="header">
+                            			<h2><b>
+                                			Cursos Activos
+                            			</h2></b>
+                        			</div>
+                        			<div class="body">
+                        				<div class="body table-responsive">
+                            				<table class="table table-bordered">
+                                				<thead>
+                                    				<tr>
+                                        				<th>Carrera</th>
+                                        				<th>Curso</th>
+                                                        <th>Sigla</th>
+                                        				<th>Periodo</th>
+                                                        <th>Paralelo</th>
+                                                        <th><center>Acciones</center></th>
+                                    				</tr>
+                                				</thead>
+                                				<tbody>
+                                				{% if curso %}
+                                				{% for curso in curso %}
+                                    				<tr>
+                                        				<th scope="row">{{curso.asignatura.carrera.nombre}}</th>
+                                        				<td>{{curso.asignatura.nombre}}</td>
+                                                        <td>{{curso.asignatura.sigla}}</td>
+                                        				<td>{{curso.semestre}}-{{curso.anio}}</td>
+                                                        <td>{{curso.paralelo.nombre}}</td>
+                                                        <td>
+                                                            <center>
+                                                                <a href="{% url 'coevaluaciones_evaluaciones' curso.pk %}" class="btn btn bg-cyan btn-circle waves-effect" title="Ir a Evaluaciones"><i class="material-icons">search</i></a>
+                                                            </center>
+                                                        </td>
+                                    				</tr>
+                                    			{% endfor %}
+                                    			{% else %}
+                                    				<center><h5><b>¡No hay registros de Cursos en tu lista! ¡Agrega uno! </b></h5></center>
+                                    				<center><a href="{% url 'agregarAsignatura' %}" type="button" class="btn btn-success btn-circle waves-effect waves-circle waves-float"><i class="material-icons">add</i></a></center>
+                                    			{% endif %}
+                                				</tbody>
+                            				</table>
+                                           {% if usuario.tipo_usuario.nombre == 'Administrador' %} <center><a href="{% url 'agregarAsignatura' %}" type="button" title= "Agregar Curso"class="btn bg-teal waves-effect btn-circle waves-circle waves-float"><i class="material-icons">add</i></a></center>{% endif %}
+                        				</div>
+                        			</div>
+
+                    			</div>
+               	 			</div>
+            			</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</section>
+</body>
+
+
+{% endblock %}

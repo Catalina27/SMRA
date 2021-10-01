@@ -1,0 +1,187 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+<body class="theme-amber">
+<section class="content">
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2><center><b>
+                                REGISTRAR ASPECTO
+                                <small>Registra aspectos para utilizarlos en las rúbricas</small>
+                        </h2></center></b>
+                    </div>
+
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="card">
+                                    <div class="header">
+                                        <h2><b>
+                                            ASPECTOS - RÚBRICA
+                                        </h2></b>
+                                    </div>
+
+                                    <div class="body">
+                                        <form method="POST">{% csrf_token %}
+                                            <div class="form-row">
+                                                <div class="col-md-8 mb-8">
+                                                    <label for="{{form.nombre.nombre}}">{{form.nombre.label}}</label>
+                                                    {{form.nombre}}
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-sm-10">
+                                                    <button type="submit" class="btn btn-primary">Agregar</button>
+                                                    <a href="" class="btn btn-danger" title="Editar información" class="btn btn-success btn-lg btn-sm">Cancelar</a>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="card">
+                                    <center>
+                                        <!-- MENSAJE CON CANTIDAD DE CARRERAS MOSTRADOS -->
+
+                                        <nav aria-label="Page navigation example">
+                                            <ul class="pagination">
+                                                <li class="page-item disabled">
+                                                    <a tabindex="-1"><small>Página<strong>[{{ aspectos.number }}]</strong>. Total de Aspectos registrados: <strong>{{ aspectos.paginator.count }}</strong></small></a>
+                                                </li>
+                                            </ul>
+                                        </nav>
+                                    </center>                                  
+                                    <div class="header">
+                                        <h2><b>
+                                            ASPECTOS REGISTRADOS PARA ESTA RÚBRICA
+                                        </h2></b>
+                                    </div>
+
+                                    <div class="body">
+                                        <div class="body table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Nombre</th>
+                                                        <th><center>Estado</center></th>
+                                                        <th><center>Acciones</center></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% if aspectos %}
+                                                {% for aspectos in aspectos %}
+                                                    <tr>
+                                                        <th>{{aspectos.nombre}}</th>
+                                                        <td><center>
+                                                            {% if aspectos.estado == 'Sin Definir' %} 
+                                                                <a class="btn btn-warning" class="btn btn-success btn-sm"> <i class="material-icons">report_problem</i> {{aspectos.estado}}</a>
+                                                            {% else %}
+                                                                <a class="btn btn-success" class="btn btn-success btn-sm"> <i class="material-icons">done_all</i> {{aspectos.estado}}</a>
+                                                            {% endif %}
+                                                        </center></td>
+                                                        <td>
+                                                            <center>
+                                                            {% if aspectos.estado == 'Sin Definir' %} 
+                                                                <a href="{% url 'puntuarAspectoMantenedores' aspectos.pk %}" class="btn btn bg-purple btn-circle waves-effect" title="Definir detalle del aspecto"><i class="material-icons">add</i></a>
+                                                            {% endif %}
+
+                                                            <a href="" class="btn btn bg-pink btn-circle waves-effect" title="Editar Aspecto"><i class="material-icons">edit</i></a>
+                                                            <a href="" data-toggle="modal" data-target="#eliminarAspecto" class="btn btn bg-red btn-circle waves-effect" title="Eliminar Aspecto"><i class="material-icons">delete</i></a>
+
+                                                                  <!-- Elimnar Aspecto Modal-->
+                                                                  <div class="modal fade" id="eliminarAspecto" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                    <div class="modal-dialog" role="document">
+                                                                      <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                          <h5 class="modal-title" id="exampleModalLabel">¿Estás seguro que deseas eliminar  <i>{{aspectos.nombre}}</i>?</h5>
+                                                                          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true">×</span>
+                                                                          </button>
+                                                                        </div>
+                                                                        <div class="modal-body">Selecciona el botón <b><i>'Sí'</i></b> para eliminar esta Aspecto. De lo contrario, sólo cierra este mensaje.</div>
+                                                                        <div class="modal-footer">
+                                                                          <button class="btn btn-warning" type="submit" data-dismiss="modal">Cancelar</button>
+                                                                          <a class="btn btn-danger" href="{% url 'eliminarAspecto' aspectos.pk %}">Sí</a>
+                                                                        </div>
+                                                                      </div>
+                                                                    </div>
+                                                                  </div>
+                                                            </center>      
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                                {% else %}
+                                                    <center><h5><b>No hay Aspectos asignados a esta Evaluación <i class="material-icons">mood_bad</i></b></h5></center>
+                                                {% endif %}
+                                                </tbody>
+                                            </table><br>
+                                        </div>
+                                    </div>
+
+                                    <center>
+                                        <!--PAGINACIÓN-->
+                                            <nav aria-label="Page navigation example">
+                                              <ul class="pagination justify-content-center pagination-sm">
+                                                  {% if aspectos.has_previous %}
+                                                      {% if not search %}
+                                                      <li class="page-item">
+                                                          <a class="page-link" href="{% url 'agregarAspectoMantenedor' %} ?page={{ aspectos.previous_page_number }}" tabindex="-1">Anterior</a>
+                                                      </li>
+                                                      {% else %}
+                                                        <li class="page-item">
+                                                          <a class="page-link" href="{% url 'agregarAspectoMantenedor' %} ?{{search}}&page={{ aspectos.previous_page_number }}" tabindex="-1">Anterior</a>
+                                                        </li>
+                                                      {% endif %}
+                                                  {% else %}
+                                                    <li class="page-item disabled">
+                                                        <a class="page-link" href="#" tabindex="-1">Anterior</a>
+                                                    </li>
+                                                  {% endif %} 
+
+                                                  {% for object in aspectos.paginator.page_range %}
+                                                      <li class="page-item"><a class="page-link" href="{% url 'agregarAspectoMantenedor' %} ?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
+                                                  {% endfor %} 
+
+                                                  {% if aspectos.has_next %}
+                                                      {% if not search %}
+                                                      <li class="page-item">
+                                                          <a class="page-link" href="{% url 'agregarAspectoMantenedor' %} ?page={{ aspectos.next_page_number }}">Siguiente</a>
+                                                      </li>
+                                                      {% else %}
+                                                        <li class="page-item">
+                                                          <a class="page-link" href="{% url 'agregarAspectoMantenedor' %} ?{{search}}&page={{ aspectos.next_page_number }}">Siguiente</a>
+                                                        </li>
+                                                      {% endif %}
+                                                  {% else %}
+                                                    <li class="page-item disabled">
+                                                        <a class="page-link" href="#">Siguiente</a>
+                                                    </li>
+                                                  {% endif %}
+                                              </ul>
+                                          </nav>
+</center>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</section>
+</body>
+
+
+
+{% endblock %}

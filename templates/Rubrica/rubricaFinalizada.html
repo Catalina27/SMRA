@@ -92,10 +92,10 @@
                                                 {% if aspectos %}
                                                 {% for aspectos in aspectos %}
                                                     <tr>
-                                                        <td><b>{{aspectos.nombre}}</b></td>
+                                                        <td><b>{{aspectos.topico.nombre}}</b></td>
                                                         {% if puntajes %}
                                                         {% for puntajes in puntajes %}
-                                                        {% if puntajes.topico.nombre == aspectos.nombre %}
+                                                        {% if puntajes.topico.nombre == aspectos.topico.nombre %}
                                                         <td>{{puntajes.descripcion}}</td>
                                                         {% endif %}
                                                         {% endfor %}                         
@@ -108,7 +108,7 @@
                                                 </tbody>
                                             </table>
                                         </div>
-                                        <p align="right"><a href="" class="btn btn-success" class="btn btn bg-pink btn-sm" title="Selecciona para finalizar la rúbrica :)"> <i class="material-icons">done</i> Finalizar</a></p>
+                                        <p align="right"><a href="{% url 'detalleCurso' pka %}" class="btn btn-danger" class="btn btn bg-pink btn-sm" title="Selecciona para finalizar la rúbrica :)"> <i class="material-icons">home</i> </a></p>
                                     </div>
 
                     			</div>

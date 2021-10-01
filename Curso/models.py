@@ -56,7 +56,7 @@ class Evaluacion(models.Model):
 	tipo = models.ForeignKey(Tipo_evaluacion, null=True, blank=True, on_delete=models.CASCADE)
 	ponderacion = models.IntegerField(null=True, blank=True)
 	alumno = models.ManyToManyField(Alumno,blank=True,through= 'Evaluacion_alumnos', related_name='Evaluacion_alumnos')
-	is_grupal = models.BooleanField(default=False)
+	is_grupal = models.BooleanField(default=True)
 
 	def __str__(self):
 		return self.curso.asignatura.nombre
@@ -66,24 +66,39 @@ class Evaluacion_alumnos(models.Model):
 	evaluacion = models.ForeignKey(Evaluacion, null=True, blank=True, on_delete=models.CASCADE)
 	alumno = models.ForeignKey(Alumno, null=True, blank=True, on_delete=models.CASCADE)
 	nota = models.IntegerField(null=True, blank=True)
+	curso = models.ForeignKey(Curso, null=True, blank=True, on_delete=models.CASCADE)
 
 	def __str__(self):
 		return self.evaluacion.nombre
 
 
-class Grupo_en_Evaluacion(models.Model):
-	evaluacion = models.ForeignKey(Evaluacion, null=True, blank=True, on_delete=models.CASCADE)
+class Grupos(models.Model):
 	nombre = models.CharField(max_length=50,null=True, blank=True)
-	alumno = models.ManyToManyField(Alumno, null=True, blank=True)
+	carrera = models.ForeignKey(Carrera, null=True, blank=True, on_delete=models.CASCADE)
+	curso = models.ForeignKey(Curso, null=True, blank=True, on_delete=models.CASCADE)
+	asignatura = models.ForeignKey(Asignatura, null=True, blank=True, on_delete=models.CASCADE)
+	flag = models.BooleanField(default=False)
 
 	def __str__(self):
 		return self.nombre
+
+
+class Grupos_Alumnos(models.Model):
+	alumno = models.ForeignKey(Alumno, null=True, blank=True,on_delete=models.CASCADE)
+	grupo = models.ForeignKey(Grupos,null=True, blank=True,on_delete=models.CASCADE)
+	asignatura = models.ForeignKey(Asignatura, null=True, blank=True, on_delete=models.CASCADE)
+	curso = models.ForeignKey(Curso, null=True, blank=True, on_delete=models.CASCADE)
+	flag = models.BooleanField(default=False)
+
+	def __str__(self):
+		return self.alumno.nombre
 
 
 class Asignatura_alumnos(models.Model):
 	curso = models.ForeignKey(Curso, null=True, blank=True, on_delete=models.CASCADE)
 	alumno = models.ForeignKey(Alumno, null=True, blank=True, on_delete=models.CASCADE)
 	evaluacion = models.ForeignKey(Evaluacion_alumnos, null=True, blank=True, on_delete=models.CASCADE)
+	flag = models.BooleanField(default=False)
 
 	def __str__(self):
 		return self.curso.curso.nombre
@@ -95,3 +110,40 @@ class Archivo(models.Model):
 
 	def __str__(self):
 		return str(self.doc)
+
+
+class Archivo_notas(models.Model):
+	doc = models.FileField(upload_to='notas_alumnos/%Y/%m/%d/', blank=True, null=True)
+	curso = models.ForeignKey(Curso, null=True, blank=True, on_delete=models.CASCADE)
+	evaluacion = models.ForeignKey(Evaluacion,null=True, blank=True, on_delete=models.CASCADE)
+
+	def __str__(self):
+		return str(self.doc)
+
+
+class Validacion_Alumno(models.Model):
+	alumno = models.ForeignKey(Alumno, null=True, blank=True, on_delete=models.CASCADE)
+	evaluacion = models.ForeignKey(Evaluacion,null=True, blank=True, on_delete=models.CASCADE)
+	flag = models.BooleanField(default=False)
+
+	def __str__(self):
+		return self.alumno.nombre
+
+
+class Validacion_Grupo(models.Model):
+	grupo = models.ForeignKey(Grupos, null=True, blank=True, on_delete=models.CASCADE)
+	evaluacion = models.ForeignKey(Evaluacion,null=True, blank=True, on_delete=models.CASCADE)
+	flag = models.BooleanField(default=False)
+
+	def __str__(self):
+		return self.grupo.nombre
+
+
+class Validacion_Coevaluacion(models.Model):
+	alumno = models.ForeignKey(Alumno, null=True, blank=True, on_delete=models.CASCADE)
+	evaluacion = models.ForeignKey(Evaluacion,null=True, blank=True, on_delete=models.CASCADE)
+	flag = models.BooleanField(default=False)
+	user = models.ForeignKey(User,null=True, blank=True, on_delete=models.CASCADE)
+
+	def __str__(self):
+		return self.alumno.nombre

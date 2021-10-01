@@ -1,0 +1,190 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+<body class="theme-amber">
+<section class="content">
+		<div class="row clearfix">
+    		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        		<div class="card">
+
+                    <div class="header">
+                        <h2><center><b>
+                                EVALÚA A {{compañero.alumno.nombre}} {{compañero.alumno.apellido_pat}} {{compañero.alumno.apellido_mat}}
+                                <small>Evalúa a tus compañeros</small>
+                        </h2></center></b>
+                    </div>
+                    <form method="POST">
+                    {% csrf_token %}
+					<div class="body">
+            			<div class="row clearfix">
+                			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    			<div class="card">
+                        			<div class="header">
+                            			<h2><b>
+                                			DETALLE GENERAL
+                            			</h2></b>
+                        			</div>
+                        			<div class="body">
+                                        <p>
+                                            Carrera: <b>{{curso.asignatura.carrera.nombre}}</b><br>
+                                            Curso: <b> <i>{{curso.asignatura.sigla}}</i> - {{curso.asignatura.nombre}}</b><br>
+                                            Evaluación: <b> <i>{{evaluacion.nombre}}</i> - %{{evaluacion.ponderacion}}</b><br>                                        
+                                        </p><br>
+
+                                        <h4><b>
+                                            <center>RÚBRICA DE COEVALUACIÓN PARA TRABAJOS EN EQUIPO</center><hr>
+                                        </h4></b>
+
+
+                        			<div class="header">
+                            			<h2><b>
+                                			RÚBRICA - COEVALUACIÓN
+                            			</h2></b>
+                        			</div>
+
+                                    <div class="body">
+                                        <div class="body table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="5%">ID</th>
+                                                        <th width="15%">Aspecto</th>
+                                                        {% for calificacion in calificacion %}      
+                                                  	<th>
+                                                  		<center>
+                                                            ({{calificacion.id}}) {{calificacion.nombre}}
+                                                  		</center>
+                                                    </th> 
+                                                        {% endfor %}
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>1</td>
+                                                        <td>Cumplimiento de tareas asignadas</td>
+                                                        <td>Cumple las tareas asignadas en los plazos requeridos. La calidad de la tarea supone un notable aporte al equipo. Su trabajo orienta y facilita el del resto de los miembros del equipo.</td>
+                                                        <td>Cumple las tareas asignadas en los plazos requeridos. La calidad de la tarea supone un aporte al equipo.</td>
+                                                        <td>Cumple parcialmente las tareas asignadas y en los plazos requeridos.</td>
+                                                        <td>No cumple las tareas asignadas o no cumple con los plazos requeridos.</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>2</td>
+                                                        <td>Participación activa</td>
+                                                        <td>Se muestra activo y participativo en los encuentros de grupo. Con sus intervenciones fomenta la participación y mejora la calidad de los resultados del equipo. Sus contribuciones son fundamentales tanto para el proceso grupal como para la calidad del resultado.</td>
+                                                        <td>Se muestra activo y participativo en los encuentros de grupo. Con sus intervenciones fomenta la participación y mejora la calidad de los resultados del equipo.</td>
+                                                        <td>Interviene poco en el debate, principalmente a requerimientos de los demás.</td>
+                                                        <td>Se ausenta con frecuencia y su participación es mínima.</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>3</td>
+                                                        <td>Organización y distribución de tareas del equipo</td>
+                                                        <td>Participa en la planificación, organización y distribución del trabajo en equipo. Es organizado y distribuye las tareas con eficacia. Fomenta una organización del trabajo aprovechando los recursos de los miembros del equipo.</td>
+                                                        <td>Participa en la planificación, organización y distribución del trabajo en equipo. Es organizado y distribuye las tareas con eficacia.</td>
+                                                        <td>Se limita a aceptar la organización del trabajo propuesta por otros miembros del equipo.</td>
+                                                        <td>Manifiesta resistencias ante la organización del trabajo en el equipo.</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>4</td>
+                                                        <td>Toma en cuenta los puntos de vista de los demás y retroalimenta de forma constructiva </td>
+                                                        <td>Acepta las opiniones de los otros y sabe dar su punto de vista en forma constructiva. Fomenta el diálogo constructivo e inspira la participación de calidad de los otros miembros del grupo. Integra las opiniones de los otros en una perspectiva superior, manteniendo un clima de colaboración y apoyo.</td>
+                                                        <td>Acepta las opiniones de los otros y sabe dar su punto de vista en forma constructiva. Fomenta el diálogo constructivo e inspira la participación de calidad de los otros miembros del grupo. </td>
+                                                        <td>Escucha poco, no pregunta, no se preocupa por la opinión de los otros. Sus intervenciones son redundantes y poco sugerentes.</td>
+                                                        <td>No escucha las intervenciones de sus compañeros y las descalifica sistemáticamente. Quiere imponer sus opiniones.</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>5</td>
+                                                        <td>Contribución Participación</td>
+                                                        <td>Siempre ofrece ideas para realizar el trabajo y propone sugerencias para su mejora. Se esfuerza para alcanzar los objetivos del grupo.</td>
+                                                        <td>Ofrece ideas para realizar el trabajo, aunque pocas veces propone sugerencias para su mejora. Se esfuerza para alcanzar los objetivos del grupo.</td>
+                                                        <td>Algunas veces ofrece ideas para realizar el trabajo. Pero nunca propone sugerencias para su mejora. Acepta las propuestas de otros para alcanzar los objetivos del grupo.</td>
+                                                        <td>Nunca ofrece ideas para realizar el trabajo, ni propone sugerencias para su mejora.  En ocasiones dificulta las propuestas de otros para alcanzar los objetivos del grupo.</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>6</td>
+                                                        <td>Actitud</td>
+                                                        <td>Siempre escucha y comparte las ideas de sus compañeros e intenta integrarlas.  Busca cómo mantener la unión en el grupo.</td>
+                                                        <td>Suele escuchar y compartir las ideas de sus compañeros, pero no ofrece cómo integrarlas. Colabora en mantener la unión en el grupo</td>
+                                                        <td>A veces escucha las ideas de sus compañeros, y acepta integrarlas. No le preocupa la unión en el grupo.</td>
+                                                        <td>Muy pocas veces escucha y comparte las ideas de sus compañeros. No ayuda a mantener la unión en el grupo.</td>
+                                                    </tr>  
+                                                    <tr>
+                                                        <td>7</td>
+                                                        <td>Responsabilidad</td>
+                                                        <td>Siempre entrega su trabajo a tiempo y el grupo no tiene que modificar sus fechas o plazos.</td>
+                                                        <td>En ocasiones se retrasa en la entrega de su trabajo, aunque el grupo no tiene que modificar sus fechas o plazos.</td>
+                                                        <td>Muchas veces se retrasa en la entrega de su trabajo, y el grupo tiene que modificar a veces sus fechas o plazos.</td>
+                                                        <td>Nunca entrega su trabajo a tiempo y el grupo debe modificar sus fechas o plazos.</td>
+                                                    </tr>       
+                                                    <tr>
+                                                        <td>8</td>
+                                                        <td>Asistencia y Puntualidad</td>
+                                                        <td>Asistió siempre a las reuniones del grupo y fue puntual.</td>
+                                                        <td>Asistió de un 75% a 90% de las reuniones y siempre fue puntual.</td>
+                                                        <td>Asistió de un 61% a 74% de las reuniones y no siempre fue puntual.</td>
+                                                        <td>Asistió como máximo al 60% de las reuniones  y siempre llegó tarde.</td>
+                                                    </tr>   
+                                                    <tr>
+                                                        <td>9</td>
+                                                        <td>Resolución de conflictos</td>
+                                                        <td>En situaciones de desacuerdo o conflicto, siempre escucha otras opiniones y acepta sugerencias. Siempre propone alternativas para el consenso o la solución.</td>
+                                                        <td>En situaciones de desacuerdo o conflicto, casi siempre escucha otras opiniones y acepta sugerencias. A veces propone alternativas para el consenso o solución.</td>
+                                                        <td>En situaciones de desacuerdo o conflicto, pocas veces escucha otras opiniones o acepta sugerencias.  No propone alternativas para el consenso, pero los acepta.</td>
+                                                        <td>En situaciones de desacuerdo o conflicto, no escucha otras opiniones o acepta sugerencias. No propone alternativas y le cuesta aceptar el consenso o la solución.</td>
+                                                    </tr>                                                  
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="body">
+                                        <div class="body table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="2%">ID </th>
+                                                        <th>Selecciona</th>
+                                                </thead>
+                                                <tbody>
+                                                {{ formset.management_form }}
+                                                    {% for a in hola %}
+                                                    <tr>
+                                                        <td>
+                                                            <b>
+                                                                {{a.aspectos.id}}
+                                                            </b>
+                                                        </td>
+                                                        <td>
+                                                            <div class="col-md-15 mb-4">
+                                                                <label for ="{{ a.form.opinion.opinion }}"></label>
+                                                                    {{a.form.opinion}}
+                                                            </div>
+                                                       </td> 
+                                                    </tr>
+                                                {% endfor %}                                       
+                                                </tbody>
+                                            </table>
+                                            
+                                            <div class="form-group row">
+                                                <div class="col-sm-10">
+                                                    <right>
+                                                        <button type="submit" class="btn btn-success">Finalizar</button>
+                                                    </right>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                        			</div>
+
+                    			</div>
+               	 			</div>
+            			</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</section>
+</body>
+
+{% endblock %}

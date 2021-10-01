@@ -52,9 +52,12 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from .forms import ExtendedUserCreationForm, PersonaForm, AlumnoForm
-from .models import Alumno
+from .models import Alumno, Persona
 from django.contrib.auth.models import AbstractUser, User
-from Curso.models import Curso, Asignatura_alumnos, Evaluacion, Archivo
+from Curso.models import Curso, Asignatura_alumnos, Evaluacion, Archivo, Evaluacion_alumnos, Asignatura, Grupos_Alumnos, Grupos, Validacion_Coevaluacion
+
+from Rubrica.models import Rubrica,Evaluar_Alumnos_Coevaluacion,Calificacion_Coevaluacion,Calificacion_aspecto,Aspectos_Coevaluacion,Descripcion_Aspectos_Coevaluacion
+from Rubrica.forms import Evaluar_Alumnos_CoevaluacionForm
 from Carrera.models import Carrera
 
 from Curso.forms import Archivo_form
@@ -65,7 +68,7 @@ from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl import load_workbook
 from openpyxl.worksheet.cell_range import CellRange
 from openpyxl.worksheet.datavalidation import DataValidation
-
+from django.forms import formset_factory, modelformset_factory, modelform_factory
 # Create your views here.
 
 def register(request):
@@ -150,11 +153,12 @@ def fichaAcademica(request,pk,pka):
     alumno = Alumno.objects.get(pk=pk)
     evaluaciones = Evaluacion.objects.filter(curso=pka)
     curso = Curso.objects.get(pk=pka)
+    notas = Evaluacion_alumnos.objects.filter(curso=pka, alumno=pk)
 
     #TIPO DE USUARIO
     current_user = request.user
     usuario = Persona.objects.get(user=current_user.id)
-    return render (request,'Alumno/fichaAcademica.html', {'alumno':alumno,'evaluaciones':evaluaciones,'curso':curso,'pka':pka,'usuario':usuario})
+    return render (request,'Alumno/fichaAcademica.html', {'notas':notas,'alumno':alumno,'evaluaciones':evaluaciones,'curso':curso,'pka':pka,'usuario':usuario})
 
 #FUNCIÓN QUE DESCARGA LA PLANTILLA QUE SERÁ LLENADA PARA CARGAR A LOS ALUMNOS
 
@@ -289,3 +293,149 @@ def cargar_plantilla(request,pk):
             asignatura_alumno = Asignatura_alumnos.objects.create(alumno=Alumno.objects.get(pk=a.pk), curso=Curso.objects.get(pk=pk))
     return redirect('detalleCurso', pk)
 
+
+@login_required()
+def misCursosAlumnos(request):
+    current_user = request.user
+    usuario = Persona.objects.get(user=current_user.id)
+    nombre = current_user.username.upper()
+    apellido_pat = current_user.first_name.upper()
+    apellido_mat = current_user.last_name.upper()
+
+    tipo_usuario = usuario.tipo_usuario
+
+    alumno = Alumno.objects.filter(nombre=nombre,apellido_pat=apellido_pat, apellido_mat=apellido_mat)
+
+    for x in Alumno.objects.filter(nombre=nombre,apellido_pat=apellido_pat, apellido_mat=apellido_mat).values('carrera'):
+        for a in x.values():
+            carrera = a
+    
+    print(alumno)
+
+    curso = Curso.objects.filter(anio='2021',semestre='2',asignatura__carrera=carrera)
+    asignatura = Asignatura.objects.all()
+    rubricas = Rubrica.objects.all()
+
+    #TIPO DE USUARIO
+    current_user = request.user
+    usuario = Persona.objects.get(user=current_user.id)
+    return render (request, 'Alumno/misCursosAlumnos.html',{'usuario':usuario, 'tipo_usuario':tipo_usuario, 'curso':curso, 'asignatura':asignatura,'usuario':usuario})
+
+
+@login_required()
+def detalleCursoAlumnos(request,pk):
+    suma = 0
+
+    for x in Evaluacion.objects.filter(curso=pk):
+        suma = suma + x.ponderacion
+
+    print(suma)
+
+    rubrica = []
+    curso = Curso.objects.get(pk=pk)
+    evaluaciones = Evaluacion.objects.filter(curso=pk)
+
+    for evaluacion in Evaluacion.objects.filter(curso=pk):
+        rubrica = Rubrica.objects.raw('SELECT * FROM "Rubrica_rubrica" as rubrica JOIN "Curso_evaluacion" as evaluacion ON rubrica.curso_id = evaluacion.curso_id WHERE rubrica.curso_id = ' + str(pk) + ' AND evaluacion.id = ' + str(evaluacion.pk) + ';')
+
+    #TIPO DE USUARIO
+    current_user = request.user
+    usuario = Persona.objects.get(user=current_user.id)
+
+    nombre = current_user.username.upper()
+    apellido_pat = current_user.first_name.upper()
+    apellido_mat = current_user.last_name.upper()
+
+    tipo_usuario = usuario.tipo_usuario
+
+    alumno = Alumno.objects.get(nombre=nombre,apellido_pat=apellido_pat, apellido_mat=apellido_mat)
+    rut = alumno.pk
+
+    notas = Evaluacion_alumnos.objects.filter(curso=pk, alumno=Alumno.objects.get(pk=rut))
+
+    return render(request, 'Alumno/detalleCursoAlumnos.html', {'rut':rut,'notas':notas,'usuario':usuario,'curso':curso,'pk':pk, 'pka':pk,'evaluaciones':evaluaciones,'suma':suma,'alumno':alumno,'rubrica':rubrica})
+
+def suma_evaluacion(alumnopk):
+    alumno = Alumno.objects.get(pk=alumnopk)
+    cantidad = Evaluar_Alumnos_Coevaluacion.objects.filter(alumno=alumno).count()
+    print(type(cantidad))
+
+    return (cantidad)
+
+@login_required()
+def evaluarCompañeros(request,pk,pka,ide_evaluacion):
+    alumno = Alumno.objects.get(pk=pk)
+    evaluacion = Evaluacion.objects.get(pk=ide_evaluacion)
+    curso = Curso.objects.get(pk=pka)
+    grupo = Grupos_Alumnos.objects.get(alumno=pk)
+    nro_grupo = grupo.grupo.pk
+    integrantes = Grupos_Alumnos.objects.filter(~Q(alumno=pk), grupo=nro_grupo).order_by('alumno')
+    estado_evaluacion = {}
+
+    for x in Grupos_Alumnos.objects.filter(grupo=nro_grupo).values('alumno').order_by('alumno'):
+        for a in x.values():
+            compañero = Alumno.objects.filter(pk=a)
+            estado = suma_evaluacion(a)
+
+    for b in Grupos_Alumnos.objects.filter(~Q(alumno=pk), grupo=nro_grupo).order_by('alumno'):
+        alumno_pk = b.alumno.pk
+        for c in Validacion_Coevaluacion.objects.filter(alumno=Alumno.objects.get(pk=alumno_pk),evaluacion=Evaluacion.objects.get(pk=ide_evaluacion)):
+            alumno_pka = c.alumno.pk
+            estado_evaluacion = Validacion_Coevaluacion.objects.filter(alumno=Alumno.objects.get(pk=alumno_pk),evaluacion=Evaluacion.objects.get(pk=ide_evaluacion))
+
+
+    #TIPO DE USUARIO
+    current_user = request.user
+    usuario = Persona.objects.get(user=current_user.id)
+    return render (request, 'Alumno/evaluarCompañeros.html', {'estado':estado,'alumnopk':alumno.pk,'ide_evaluacion':ide_evaluacion,'estado_evaluacion':estado_evaluacion,'integrantes':integrantes,'grupo':grupo,'usuario':usuario,'alumno':alumno,'evaluacion':evaluacion, 'curso':curso,'pk':pk,'pka':pka})
+
+
+@login_required()
+def evalua(request,alumnopk,pka,ide_evaluacion,pk):
+
+    aspectos = Aspectos_Coevaluacion.objects.all().values().order_by('id')
+    compañero = Grupos_Alumnos.objects.get(alumno=pk)
+    grupo = Grupos_Alumnos.objects.get(alumno=pk)
+    nro_grupo = grupo.grupo.pk
+    grupo_alumno = Grupos.objects.get(pk=nro_grupo)
+    print(grupo_alumno)
+    evaluacion = Evaluacion.objects.get(pk=ide_evaluacion)
+    curso = Curso.objects.get(pk=pka)
+
+    descripcion = Descripcion_Aspectos_Coevaluacion.objects.all().order_by('aspecto')
+    calificacion = Calificacion_aspecto.objects.all().values().order_by('id')
+
+    #TIPO DE USUARIO
+    current_user = request.user
+    usuario = Persona.objects.get(user=current_user.id)
+
+    data = {
+        'form-TOTAL_FORMS': aspectos.count(),
+        'form-INITIAL_FORMS': aspectos.count(),
+        'form-MAX_NUM_FORMS': aspectos.count(),
+    }
+
+    puntajes_evaluados = formset_factory(Evaluar_Alumnos_CoevaluacionForm)
+    formset = puntajes_evaluados(data = data, initial = list(aspectos))
+
+    if request.method == 'POST':
+        actualiza = Validacion_Coevaluacion.objects.create(alumno=Alumno.objects.get(pk=pk), user=User.objects.get(pk=current_user.id),evaluacion=Evaluacion.objects.get(pk=ide_evaluacion),flag=True)
+        formset = puntajes_evaluados(request.POST, request.FILES)
+        if formset.is_valid():
+            i=0
+            for califica in aspectos:
+                creacion_puntajes = Evaluar_Alumnos_Coevaluacion.objects.create(user=User.objects.get(pk=request.user.id),alumno=Alumno.objects.get(pk=pk),grupo=grupo,evaluacion=Evaluacion.objects.get(pk=ide_evaluacion),opinion = (formset.cleaned_data[i]).get("opinion"))
+                creacion_puntajes.save()
+                i = i + 1
+                actualiza = Grupos_Alumnos.objects.filter(alumno=pk).update(flag=True)
+
+            return redirect('evaluarCompañeros',alumnopk, pka,ide_evaluacion)
+    else:
+        hola = []
+        aux = {}
+
+        for x in range(aspectos.count()):
+            aux = dict(aspectos=aspectos[x], form = formset[x])
+            hola.append(aux)
+         
+    return render(request,'Alumno/evalua.html',{'aspectos':aspectos,'descripcion':descripcion,'hola':hola,'formset':formset,'compañero':compañero,'evaluacion':evaluacion,'curso':curso,'usuario':usuario,'calificacion':calificacion,'pk':pk,'pka':pka,'ide_evaluacion':ide_evaluacion})

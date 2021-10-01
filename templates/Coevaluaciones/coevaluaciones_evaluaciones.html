@@ -1,0 +1,93 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+                                             
+<body class="theme-amber">
+<section class="content">
+		<div class="row clearfix">
+    		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        		<div class="card">
+
+                    <div class="header">
+                        <h2><center><b>
+                                MIS CURSOS
+                                <small>Cursos registrados en el sistema</small>
+                        </h2></center></b>
+                    </div>
+
+					<div class="body">
+            			<div class="row clearfix">
+                			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    			<div class="card">
+                        			<div class="header">
+                            			<h2><b>
+                                			DETALLE GENERAL CURSO
+                            			</h2></b>
+                        			</div>
+                        			<div class="body">
+                                        <p>
+                                            Carrera: <b>{{curso.asignatura.carrera.nombre}}</b><br>
+                                            Curso: <b> <i>{{curso.asignatura.sigla}}</i> - {{curso.asignatura.nombre}}</b><br>                                           
+                                        </p><br>
+
+                                        <h4><b>
+                                            <center>EVALUACIONES DE LA ASIGNATURA</center>
+                                        </h4></b>
+
+                                    <div class="body">
+                                        <div class="body table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Evaluación</th>
+                                                        <th>Tipo</th>
+                                                        <th>% Ponderación</th>
+                                                        <th>Carácter</th>
+                                                        <th><center>Acciones</center></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% if evaluaciones %}
+                                                {% for evaluaciones in evaluaciones %}
+                                                    <tr>
+                                                        <td>{{evaluaciones.nombre}}</td>
+                                                        <td>{{evaluaciones.tipo.nombre}}</td>
+                                                        <td>{{evaluaciones.ponderacion}}</td>
+                                                        <td>{% if evaluaciones.is_grupal == True %} Grupal {% else %} Individual {% endif %}</td>
+                                                        
+                                                        {% if evaluaciones.is_grupal == True %}
+                                                        <td>
+                                                            <center>
+                                                                <a href="{% url 'plantilla_descarga_coevaluacion_alumnos' pk evaluaciones.pk %}" class="btn btn bg-cyan btn-circle waves-effect" title="Ver Rúbricas Asociadas"><i class="material-icons">cloud_download</i></a>
+                                                            </center>
+                                                        </td>
+                                                        {% else %}
+                                                        <td><b><center>No hay Coevaluaciones </center></b></td>
+                                                        {% endif %}
+                                                    </tr>
+                                                {% endfor %}
+                                                {% else %}
+                                                    <center><h5><b>¡No hay registros de Evaluaciones en este curso! </b></h5></center>
+                                                {% endif %}
+                                				</tbody>
+                            				</table>
+                        				</div>
+
+<br>
+
+                        			</div>
+
+                    			</div>
+               	 			</div>
+            			</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</section>
+</body>
+
+
+
+{% endblock %}

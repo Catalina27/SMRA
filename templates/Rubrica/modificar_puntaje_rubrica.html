@@ -1,0 +1,107 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+<body class="theme-amber">
+<section class="content">
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2><center><b>
+                                MODIFICACIÓN PUNTAJE DE DESCRIPCIONES DE ASPECTO - {{rubrica.nombre}}
+                                <small>Registra los nuevos puntajes</small>
+                        </h2></center></b>
+                    </div>
+
+<form method="POST">{% csrf_token %}
+
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="card">
+                                    <div class="header">
+                                        <h2><b>
+                                            CALIFICACIONES
+                                        </h2></b>
+                                    </div>
+
+                                    <div class="body">
+                                        <div class="body table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Nombre</th>
+                                                        <th>Puntaje</th>
+                                                        <th><center>Acciones</center></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% if calificaciones %}
+                                                {% for calificaciones in calificaciones %}
+                                                    <tr>
+                                                        <th>{{calificaciones.nombre}}</th>
+                                                        <th>{{calificaciones.valor}}</th>
+                                                        <td>
+                                                            <center>
+                                                            {% if calificaciones.estado == 'Sin Definir' %} 
+                                                                <a href="" class="btn btn bg-purple btn-circle waves-effect" title="Definir detalle del aspecto"><i class="material-icons">add</i></a>
+                                                            {% endif %}
+
+                                                            <a href="" data-toggle="modal" data-target="#eliminarAspecto" class="btn btn bg-pink btn-circle waves-effect" title="Editar Aspecto"><i class="material-icons">edit</i></a>
+
+                                                                  <!-- Elimnar Aspecto Modal-->
+                                                                  <div class="modal fade" id="eliminarAspecto" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                    <div class="modal-dialog" role="document">
+                                                                      <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                          <h5 class="modal-title" id="exampleModalLabel">Edición de puntaje</h5>
+                                                                          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true">×</span>
+                                                                          </button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+									                                        <form method="POST">{% csrf_token %}
+									                                            <div class="form-row">
+									                                                <div class="col-md-8 mb-8">
+									                                                    <label for="{{form.valor.valor}}">{{form.valor.label}}</label>
+									                                                    {{form.valor}}
+									                                                </div>
+									                                            </div>
+									                                        </form>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                          <a href="" class="btn btn-danger" title="Editar información" class="btn btn-success btn-lg btn-sm">Cancelar</a>
+                                                                          <button type="submit" class="btn btn-primary">Agregar</button>
+                                                                        </div>
+                                                                      </div>
+                                                                    </div>
+                                                                  </div>
+                                                            </center>      
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                                {% else %}
+                                                    <center><h5><b>No hay Aspectos asignados a esta Evaluación <i class="material-icons">mood_bad</i></b></h5></center>
+                                                {% endif %}
+                                                </tbody>
+                                            </table><br>
+                                                <p align="right"> <a href="{% url 'rubricaFinalizada' pk pka %}" class="btn btn-success btn-sm" title="Finalizar Rúbrica :)"> <i class="material-icons">done</i> Finalizar</a></p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+</section>
+</body>
+
+
+
+{% endblock %}

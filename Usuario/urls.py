@@ -25,5 +25,9 @@ urlpatterns = [
     path('alumnos/ficha-academica/<slug:pk>/<int:pka>', views.fichaAcademica, name='fichaAcademica'),
 	path('cursos/docente/detalle-curso/ingreso-alumnos/descarga-excel/<int:pk>', views.plantilla_alumnos_excel.as_view(), name='plantilla_alumnos_excel'),
     path('cursos/docente/detalle-curso/cargar-plantilla-alumnos/<int:pk>', views.subir_plantilla_alumnos, name='subir_plantilla_alumnos'),  
-    path('cursos/docente/detalle-curso/cargar-plantilla/<int:pk>', views.cargar_plantilla, name='cargar_plantilla'),  
+    path('cursos/docente/detalle-curso/cargar-plantilla/<int:pk>', views.cargar_plantilla, name='cargar_plantilla'),
+    path('alumnos/mis-cursos', views.misCursosAlumnos, name='misCursosAlumnos'),
+    path('alumnos/mis-cursos/detalle-curso/<int:pk>', views.detalleCursoAlumnos, name='detalleCursoAlumnos'),
+    path('alumnos/mis-cursos/detalle-curso/evaluar-compañeros/<slug:pk>/<int:pka>/<int:ide_evaluacion>', views.evaluarCompañeros, name='evaluarCompañeros'),
+    path('alumnos/mis-cursos/detalle-curso/evaluar-compañeros/evalua/<slug:alumnopk>/<int:pka>/<int:ide_evaluacion>/<slug:pk>', views.evalua, name='evalua'),    
 ]

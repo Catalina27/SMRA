@@ -1,0 +1,132 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+                                             
+<body class="theme-amber">
+<section class="content">
+		<div class="row clearfix">
+    		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        		<div class="card">
+
+                    <div class="header">
+                        <h2><center><b>
+                                CURSO {{curso.asignatura.sigla}} - {{curso.asignatura.nombre}}
+                                <small>Evalúa a tus compañeros</small>
+                        </h2></center></b>
+                    </div>
+
+					<div class="body">
+            			<div class="row clearfix">
+                			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    			<div class="card">
+                        			<div class="header">
+                            			<h2><b>
+                                			DETALLE GENERAL CURSO
+                            			</h2></b>
+                        			</div>
+                        			<div class="body">
+                                        <p>
+                                            Carrera: <b>{{curso.asignatura.carrera.nombre}}</b><br>
+                                            Curso: <b> <i>{{curso.asignatura.sigla}}</i> - {{curso.asignatura.nombre}}</b><br>                                           
+                                        </p><br>
+
+                                        <h4><b>
+                                            <center>EVALUACIÓN <i>{{evaluacion.nombre}} - {{evaluacion.ponderacion}}% </i></center><hr>
+                                        </h4></b>
+
+<p>
+                                            Grupo: <b>{{grupo.grupo.nombre}}</b><br>
+                                        </p>
+                                        <div class="body table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>RUT</th>
+                                                        <th>Nombre</th>
+                                                        <th>Mail</th>
+                                                        {% for notas in notas %}<th>Nota {{notas.evaluacion.nombre}}</th>{% endfor %}
+                                                        <th><center>Estado Evaluación</center></th>
+                                                        <th><center>Acciones</center></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% if integrantes %}
+                                                {% for integrantes in integrantes %}
+                                                    <tr>
+                                                        <td>{{integrantes.alumno.rut}}</td>
+                                                        <td>{{integrantes.alumno.nombre}} {{integrantes.alumno.apellido_pat}} {{integrantes.alumno.apellido_mat}}</td>
+                                                        <td>{{integrantes.alumno.mail}}</td>
+                                                            
+                                                            {% if estado_evaluacion %}
+                                                            {% for estado_evaluacion in estado_evaluacion %}
+                                                        	{% if estado_evaluacion.flag == True %}
+                                                            {% if estado_evaluacion.alumno.pk == integrantes.alumno.pk %}
+                                                        <td>
+                                                            <center>
+                                                                <a class="btn btn bg-light-green btn-circle waves-effect" title="Evaluado :)"><i class="material-icons">done_all</i></a>
+                                                            </center>
+                                                        </td>
+                                                        	{% else %}
+                                                        <td>
+                                                            <center>
+                                                                <a class="btn btn bg-red btn-circle waves-effect" title="Pendiente :o"><i class="material-icons">error</i></a>
+                                                            </center>
+                                                        </td>
+                                                        {% endif %}
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                        {% else %}
+                                                                                                                <td>
+                                                            <center>
+                                                                <a class="btn btn bg-red btn-circle waves-effect" title="Pendiente :o"><i class="material-icons">error</i></a>
+                                                            </center>
+                                                        </td>
+                                                        {% endif %}
+
+                                                            {% if estado_evaluacion %}
+                                                            {% for estado_evaluacion in estado_evaluacion %}
+                                                            {% if estado_evaluacion.flag == True %}
+                                                            {% if estado_evaluacion.alumno.pk == integrantes.alumno.pk %}
+                                                        <td>
+                                                        	<center>
+                                                        		<a class="btn btn-warning" disabled="disabled">Evaluar</a>
+                                                        	<center>
+                                                        </td>
+                                                        {% else %}
+                                                        <td>
+                                                            <center>
+                                                                <a class="btn btn-warning" href="{% url 'evalua' alumno.pk pka ide_evaluacion integrantes.alumno.pk %}">Evaluar</a>
+                                                            <center>
+                                                        </td>
+                                                        {% endif %}
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                        {% else %}
+                                                                                                                <td>
+                                                            <center>
+                                                                <a class="btn btn-warning" href="{% url 'evalua' alumno.pk pka ide_evaluacion integrantes.alumno.pk %}">Evaluar</a>
+                                                            <center>
+                                                        </td>
+                                                        {% endif %}
+                                                    </tr> 
+                                                {% endfor %}
+                                                {% else %}
+                                                <center><h5><b>¡No hay registros de Alumnos inscritos en este curso! </b></h5></center>
+                                                {% endif %}
+                                                </tbody>
+                                            </table>                         
+                                        </div>
+                        			</div>
+
+                    			</div>
+               	 			</div>
+            			</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</section>
+</body>
+
+{% endblock %}

@@ -325,27 +325,25 @@
                             <span>Home</span>
                         </a>
                     </li>
-                    <li>
+                    {% if usuario.tipo_usuario.nombre != "Alumno" %}
+                   <!-- <li>
                         <a href="">
                             <i class="material-icons">layers</i>
                             <span>Crea una Rúbrica</span>
                         </a>
-                    </li>
-                    {% if usuario.tipo_usuario.nombre == 'Docente' %}
+                    </li>-->
                     <li>
                         <a href="{% url 'misCursos' %}">
                             <i class="material-icons">work</i>
                             <span>Mis Cursos</span>
                         </a>
                     </li>
-                    {% else %}
                     <li>
-                        <a class="dropdown-item" href="" data-toggle="modal" data-target="#noDocenteModal">
-                            <i class="material-icons">work</i>
-                            <span>Mis Cursos</span>
+                        <a href="{% url 'coevaluaciones' %}">
+                            <i class="material-icons">cloud_download</i>
+                            <span>Coevaluaciones</span>
                         </a>
                     </li>
-                    {% endif %}
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">widgets</i>
@@ -358,13 +356,13 @@
                                 </a>
                                 <ul class="ml-menu">
                                     <li>
-                                        <a href="pages/widgets/cards/basic.html">Facultad de Ingeniería</a>
+                                        <a href="">Facultad de Ingeniería</a>
                                     </li>
                                     <li>
-                                        <a href="pages/widgets/cards/colored.html">Facultad de Ciencias</a>
+                                        <a href="">Facultad de Ciencias</a>
                                     </li>
                                     <li>
-                                        <a href="pages/widgets/cards/no-header.html">Facultad de Filosofía y Educación</a>
+                                        <a href="">Facultad de Filosofía y Educación</a>
                                     </li>
                                 </ul>
                             </li>
@@ -377,10 +375,10 @@
                         </a>
                         <ul class="ml-menu">
                             <li>
-                                <a href="pages/ui/alerts.html">¿Qué son?</a>
+                                <a href="">¿Qué son?</a>
                             </li>
                             <li>
-                                <a href="pages/ui/animations.html">Importancia en la Educación</a>
+                                <a href="">Importancia en la Educación</a>
                             </li>
                         </ul>
                     </li>
@@ -391,9 +389,9 @@
                         </a>
                         <ul class="ml-menu">
                             <li>
-                                <a href="pages/charts/morris.html">Temas</a>
-                                <a href="pages/charts/morris.html">Categorías</a>
-                                <a href="pages/charts/morris.html">Actividades</a>
+                                <a href="{% url 'agregarAspectoMantenedor' %}">Aspectos</a>
+                                <a href="">Categorías</a>
+                                <a href="">Actividades</a>
                                 <a href="{% url 'MantenedorContenido' %}">Contenido</a>
                             </li>
                         </ul>
@@ -404,6 +402,15 @@
                             <span>Estadísticas</span>
                         </a>
                     </li>
+                    {% endif %}
+                    {% if usuario.tipo_usuario.nombre == "Alumno" %}
+                    <li>
+                        <a href="{% url 'misCursosAlumnos' %}">
+                            <i class="material-icons">work</i>
+                            <span>Mis Cursos</span>
+                        </a>
+                    </li>
+                    {% endif %}
                     <!--<li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">trending_down</i>

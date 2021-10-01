@@ -49,7 +49,9 @@
                                                         <th scope="row">{{curso.asignatura.sigla}} - {{curso.asignatura.nombre}}</th>
                                                         <th>{{curso.semestre}} - {{curso.anio}}</th>
                                                         <th>{{curso.profesor.username}}</th>
-                                                        {% for evaluaciones in evaluaciones %}<td></td> {% endfor %}
+                                                        {% for notas in notas %}
+                                                        <td>{{notas.nota}}</td> 
+                                                        {% endfor %}
                                                     </tr>
                                                 {% else %}
                                                     <center><h5><b>¡No has registrado ninguna Asignatura!</b></h5></center>
