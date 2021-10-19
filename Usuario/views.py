@@ -14,6 +14,7 @@ import request
 from django.db.models import Q
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from openpyxl import Workbook
+from django.contrib import messages
 
 #librería matplotlib que permite generar gráficos
 #from matplotlib import pyplot
@@ -285,7 +286,7 @@ def cargar_plantilla(request,pk):
     i = 0
     for alumno in lista_alumnos[1:]:
 
-        if Alumno.objects.get(rut=alumno[0]):
+        if Alumno.objects.filter(rut=alumno[0]):
             alumno_registrado = Alumno.objects.get(rut=alumno[0])
             asignatura_alumno = Asignatura_alumnos.objects.create(alumno=Alumno.objects.get(pk=alumno_registrado.pk), curso=Curso.objects.get(pk=pk))
         else:
@@ -296,29 +297,25 @@ def cargar_plantilla(request,pk):
 
 @login_required()
 def misCursosAlumnos(request):
+    #TIPO DE USUARIO
     current_user = request.user
     usuario = Persona.objects.get(user=current_user.id)
+
     nombre = current_user.username.upper()
     apellido_pat = current_user.first_name.upper()
     apellido_mat = current_user.last_name.upper()
 
     tipo_usuario = usuario.tipo_usuario
-
-    alumno = Alumno.objects.filter(nombre=nombre,apellido_pat=apellido_pat, apellido_mat=apellido_mat)
+    alumno = Alumno.objects.get(nombre=nombre,apellido_pat=apellido_pat, apellido_mat=apellido_mat)
 
     for x in Alumno.objects.filter(nombre=nombre,apellido_pat=apellido_pat, apellido_mat=apellido_mat).values('carrera'):
         for a in x.values():
             carrera = a
-    
-    print(alumno)
+    curso = Curso.objects.filter(anio='2021',semestre='2',asignatura__carrera=Carrera.objects.get(pk=alumno.carrera.pk))
 
-    curso = Curso.objects.filter(anio='2021',semestre='2',asignatura__carrera=carrera)
     asignatura = Asignatura.objects.all()
     rubricas = Rubrica.objects.all()
 
-    #TIPO DE USUARIO
-    current_user = request.user
-    usuario = Persona.objects.get(user=current_user.id)
     return render (request, 'Alumno/misCursosAlumnos.html',{'usuario':usuario, 'tipo_usuario':tipo_usuario, 'curso':curso, 'asignatura':asignatura,'usuario':usuario})
 
 
@@ -370,18 +367,12 @@ def evaluarCompañeros(request,pk,pka,ide_evaluacion):
     grupo = Grupos_Alumnos.objects.get(alumno=pk)
     nro_grupo = grupo.grupo.pk
     integrantes = Grupos_Alumnos.objects.filter(~Q(alumno=pk), grupo=nro_grupo).order_by('alumno')
-    estado_evaluacion = {}
+    estado_evaluacion = Validacion_Coevaluacion.objects.filter(user=User.objects.get(pk=request.user.id), evaluacion=Evaluacion.objects.get(pk=ide_evaluacion))
 
     for x in Grupos_Alumnos.objects.filter(grupo=nro_grupo).values('alumno').order_by('alumno'):
         for a in x.values():
             compañero = Alumno.objects.filter(pk=a)
             estado = suma_evaluacion(a)
-
-    for b in Grupos_Alumnos.objects.filter(~Q(alumno=pk), grupo=nro_grupo).order_by('alumno'):
-        alumno_pk = b.alumno.pk
-        for c in Validacion_Coevaluacion.objects.filter(alumno=Alumno.objects.get(pk=alumno_pk),evaluacion=Evaluacion.objects.get(pk=ide_evaluacion)):
-            alumno_pka = c.alumno.pk
-            estado_evaluacion = Validacion_Coevaluacion.objects.filter(alumno=Alumno.objects.get(pk=alumno_pk),evaluacion=Evaluacion.objects.get(pk=ide_evaluacion))
 
 
     #TIPO DE USUARIO
@@ -439,3 +430,230 @@ def evalua(request,alumnopk,pka,ide_evaluacion,pk):
             hola.append(aux)
          
     return render(request,'Alumno/evalua.html',{'aspectos':aspectos,'descripcion':descripcion,'hola':hola,'formset':formset,'compañero':compañero,'evaluacion':evaluacion,'curso':curso,'usuario':usuario,'calificacion':calificacion,'pk':pk,'pka':pka,'ide_evaluacion':ide_evaluacion})
+
+def suma_puntos_coevaluacion(evaluacion,alumno):
+
+    lista_puntaje = []
+    alum= Alumno.objects.get(pk=alumno)
+    eva = Evaluacion.objects.get(pk=evaluacion)
+    suma = 0
+
+    for x in Aspectos_Coevaluacion.objects.all().order_by('id'):
+        aspecto = x.pk
+        for y in Evaluar_Alumnos_Coevaluacion.objects.filter(alumno=alum,evaluacion=eva,aspecto=Aspectos_Coevaluacion.objects.get(pk=aspecto)):
+            suma = suma + int(y.opinion.nombre)
+            lista_puntaje.append(int(y.opinion.nombre))
+
+    #FALTA DIVIDIR PUNTOS POR TOTAL EN VALIDACION_COEVALUACION.objects.filter(evaluacion,alumno)
+    return (lista_puntaje)
+
+
+@login_required()
+def verResultadosCoevaluacion(request,curso,evaluacion,alumno):
+    curso = Curso.objects.get(pk=curso)
+
+    puntaje = suma_puntos_coevaluacion(evaluacion,alumno)
+    if len(puntaje) > 1:
+        puntajes = suma_puntos_coevaluacion(evaluacion,alumno)
+        puntaje_total = sum(puntajes)
+    else:
+        puntajes = [0,0,0,0,0,0,0,0,0]
+        puntaje_total = sum(puntajes)
+
+    #TIPO DE USUARIO
+    current_user = request.user
+    usuario = Persona.objects.get(user=current_user.id)
+
+    return render (request,'Alumno/verResultadosCoevaluacion.html',{'puntajes':puntajes,'puntaje_total':puntaje_total,'usuario':usuario,'curso':curso})
+
+
+@login_required()
+def evaluaCoevaluacion(request,pk,ide_evaluacion,pka):
+
+    alumno = Alumno.objects.get(pk=pk)
+    evaluacion = Evaluacion.objects.get(pk=ide_evaluacion)
+    curso = Curso.objects.get(pk=pka)
+    grupo = Grupos_Alumnos.objects.get(alumno=pk)
+    nro_grupo = grupo.grupo.pk
+    integrantes = Grupos_Alumnos.objects.filter(~Q(alumno=pk), grupo=nro_grupo).order_by('alumno')
+    estado_evaluacion = {}
+
+    aspectos = Aspectos_Coevaluacion.objects.all().values().order_by('id')
+    descripcion = Descripcion_Aspectos_Coevaluacion.objects.all().order_by('aspecto')
+    calificacion = Calificacion_aspecto.objects.all().values().order_by('id')
+
+    lista_integrantes = []
+
+    for ab in Grupos_Alumnos.objects.filter(~Q(alumno=pk), grupo=nro_grupo).order_by('alumno'):
+        lista_integrantes.append(ab.alumno.pk)
+
+    #TIPO DE USUARIO
+    current_user = request.user
+    usuario = Persona.objects.get(user=current_user.id)
+
+
+    data = {
+        'form-TOTAL_FORMS': integrantes.count(),
+        'form-INITIAL_FORMS': integrantes.count(),
+        'form-MAX_NUM_FORMS': integrantes.count(),
+    }
+
+    puntajes_evaluados = formset_factory(Evaluar_Alumnos_CoevaluacionForm,extra=integrantes.count())
+    formset = puntajes_evaluados(data = data, initial = list(calificacion))
+    formset2 = puntajes_evaluados(data = data, initial = list(calificacion))
+    formset3 = puntajes_evaluados(data = data, initial = list(calificacion))
+    formset4 = puntajes_evaluados(data = data, initial = list(calificacion))
+    formset5 = puntajes_evaluados(data = data, initial = list(calificacion))
+    formset6 = puntajes_evaluados(data = data, initial = list(calificacion))
+    formset7 = puntajes_evaluados(data = data, initial = list(calificacion))
+    formset8 = puntajes_evaluados(data = data, initial = list(calificacion))
+    formset9 = puntajes_evaluados(data = data, initial = list(calificacion))
+
+    if request.method == 'POST':
+        formset = puntajes_evaluados(request.POST, request.FILES, prefix="form1")
+        formset2 = puntajes_evaluados(request.POST, request.FILES, prefix="form2")
+        formset3 = puntajes_evaluados(request.POST, request.FILES, prefix="form3")
+        formset4 = puntajes_evaluados(request.POST, request.FILES, prefix="form4")
+        formset5 = puntajes_evaluados(request.POST, request.FILES, prefix="form5")
+        formset6 = puntajes_evaluados(request.POST, request.FILES, prefix="form6")
+        formset7 = puntajes_evaluados(request.POST, request.FILES, prefix="form7")
+        formset8 = puntajes_evaluados(request.POST, request.FILES, prefix="form8")
+        formset9 = puntajes_evaluados(request.POST, request.FILES, prefix="form9")
+
+        if all([formset.is_valid() and formset2.is_valid() and formset3.is_valid()]):
+            ai=0
+            bi=0
+            ci=0
+            di=0
+            ei=0
+            fi=0
+            gi=0
+            hi=0
+            ii=0
+            for califica in range(len(calificacion)):
+                for form in formset:
+                    creacion_puntajes = Evaluar_Alumnos_Coevaluacion.objects.create(user=User.objects.get(pk=request.user.id),alumno=Alumno.objects.get(pk=lista_integrantes[bi]),grupo=grupo,evaluacion=Evaluacion.objects.get(pk=ide_evaluacion),opinion = (formset.cleaned_data[bi]).get("opinion"))
+                    creacion_puntajes.save()
+                    bi = bi + 1
+
+                for form2 in formset2:
+                    creacion_puntajes2 = Evaluar_Alumnos_Coevaluacion.objects.create(user=User.objects.get(pk=request.user.id),alumno=Alumno.objects.get(pk=lista_integrantes[ai]),grupo=grupo,evaluacion=Evaluacion.objects.get(pk=ide_evaluacion),opinion = (formset2.cleaned_data[ai]).get("opinion"))
+                    creacion_puntajes2.save()
+                    ai = ai + 1
+
+                for form3 in formset3:
+                    creacion_puntajes3 = Evaluar_Alumnos_Coevaluacion.objects.create(user=User.objects.get(pk=request.user.id),alumno=Alumno.objects.get(pk=lista_integrantes[ci]),grupo=grupo,evaluacion=Evaluacion.objects.get(pk=ide_evaluacion),opinion = (formset3.cleaned_data[ci]).get("opinion"))
+                    creacion_puntajes3.save()
+                    ci = ci + 1
+
+                for form4 in formset4:
+                    creacion_puntajes4 = Evaluar_Alumnos_Coevaluacion.objects.create(user=User.objects.get(pk=request.user.id),alumno=Alumno.objects.get(pk=lista_integrantes[di]),grupo=grupo,evaluacion=Evaluacion.objects.get(pk=ide_evaluacion),opinion = (formset4.cleaned_data[di]).get("opinion"))
+                    creacion_puntajes4.save()
+                    di = di + 1
+
+                for form5 in formset5:
+                    creacion_puntajes5 = Evaluar_Alumnos_Coevaluacion.objects.create(user=User.objects.get(pk=request.user.id),alumno=Alumno.objects.get(pk=lista_integrantes[ei]),grupo=grupo,evaluacion=Evaluacion.objects.get(pk=ide_evaluacion),opinion = (formset5.cleaned_data[ei]).get("opinion"))
+                    creacion_puntajes5.save()
+                    ei = ei + 1
+
+                for form6 in formset6:
+                    creacion_puntajes6 = Evaluar_Alumnos_Coevaluacion.objects.create(user=User.objects.get(pk=request.user.id),alumno=Alumno.objects.get(pk=lista_integrantes[fi]),grupo=grupo,evaluacion=Evaluacion.objects.get(pk=ide_evaluacion),opinion = (formset6.cleaned_data[fi]).get("opinion"))
+                    creacion_puntajes6.save()
+                    fi = fi + 1
+
+                for form7 in formset7:
+                    creacion_puntajes7 = Evaluar_Alumnos_Coevaluacion.objects.create(user=User.objects.get(pk=request.user.id),alumno=Alumno.objects.get(pk=lista_integrantes[gi]),grupo=grupo,evaluacion=Evaluacion.objects.get(pk=ide_evaluacion),opinion = (formset7.cleaned_data[gi]).get("opinion"))
+                    creacion_puntajes7.save()
+                    gi = gi + 1
+
+                for form8 in formset8:
+                    creacion_puntajes8 = Evaluar_Alumnos_Coevaluacion.objects.create(user=User.objects.get(pk=request.user.id),alumno=Alumno.objects.get(pk=lista_integrantes[hi]),grupo=grupo,evaluacion=Evaluacion.objects.get(pk=ide_evaluacion),opinion = (formset8.cleaned_data[hi]).get("opinion"))
+                    creacion_puntajes8.save()
+                    hi = hi + 1
+
+                for form9 in formset9:
+                    creacion_puntajes9 = Evaluar_Alumnos_Coevaluacion.objects.create(user=User.objects.get(pk=request.user.id),alumno=Alumno.objects.get(pk=lista_integrantes[ii]),grupo=grupo,evaluacion=Evaluacion.objects.get(pk=ide_evaluacion),opinion = (formset9.cleaned_data[ii]).get("opinion"))
+                    creacion_puntajes9.save()
+                    ii = ii + 1
+
+                print('SE GUARDÓ TO')
+                validacion_coevaluacion = Validacion_Coevaluacion.objects.create(flag=True,evaluacion=Evaluacion.objects.get(pk=ide_evaluacion),user=User.objects.get(pk=request.user.id))
+                return redirect('evaluarCompañeros',pk, pka,ide_evaluacion)
+        else:
+            messages.warning(request, 'Error en el formulario ❗❗')
+
+    else:
+        formset = puntajes_evaluados(prefix="form1")
+        formset2 = puntajes_evaluados(prefix="form2")
+        formset3 = puntajes_evaluados(prefix="form3")
+        formset4 = puntajes_evaluados(prefix="form4")
+        formset5 = puntajes_evaluados(prefix="form5")
+        formset6 = puntajes_evaluados(prefix="form6")
+        formset7 = puntajes_evaluados(prefix="form7")
+        formset8 = puntajes_evaluados(prefix="form8")
+        formset9 = puntajes_evaluados(prefix="form9")
+
+    return render (request,'Alumno/evaluaCoevaluacion.html',{'formset9':formset9,'formset8':formset8,'formset7':formset7,'formset6':formset6,'formset5':formset5,'formset4':formset4,'formset3':formset3,'formset':formset,'formset2':formset2,'usuario':usuario,'formset':formset,'aspectos':aspectos,'calificacion':calificacion,'alumno':alumno,'integrantes':integrantes,'curso':curso,'nro_grupo':nro_grupo,'evaluacion':evaluacion,'descripcion':descripcion})
+
+
+@login_required()
+def evaluaCoevaluacion2(request,pk,ide_evaluacion,pka):
+
+    alumno = Alumno.objects.get(pk=pk)
+    evaluacion = Evaluacion.objects.get(pk=ide_evaluacion)
+    curso = Curso.objects.get(pk=pka)
+    grupo = Grupos_Alumnos.objects.get(alumno=pk)
+    nro_grupo = grupo.grupo.pk
+    integrantes = Grupos_Alumnos.objects.filter(~Q(alumno=pk), grupo=nro_grupo).order_by('alumno')
+    estado_evaluacion = {}
+
+    aspectos = Aspectos_Coevaluacion.objects.all().values().order_by('id')
+    descripcion = Descripcion_Aspectos_Coevaluacion.objects.all().order_by('aspecto')
+    calificacion = Calificacion_aspecto.objects.all().values().order_by('id')
+    lista_integrantes = []
+
+    for ab in Grupos_Alumnos.objects.filter(~Q(alumno=pk), grupo=nro_grupo).order_by('alumno'):
+        lista_integrantes.append(ab.alumno.pk)
+
+    #TIPO DE USUARIO
+    current_user = request.user
+    usuario = Persona.objects.get(user=current_user.id)
+
+
+    data = {
+        'form-TOTAL_FORMS': integrantes.count(),
+        'form-INITIAL_FORMS': integrantes.count(),
+        'form-MAX_NUM_FORMS': integrantes.count(),
+    }
+
+    puntajes_evaluados2 = formset_factory(Evaluar_Alumnos_CoevaluacionForm)
+    formset2 = puntajes_evaluados2(data = data, initial = list(calificacion))
+
+    hola2 = []
+    aux2 = {}
+
+    for b in range(len(calificacion)):
+        aux2 = dict(calificacion=calificacion[b], form = formset2[b])
+        hola2.append(aux2)
+
+    if request.method == 'POST':
+        formset2 = puntajes_evaluados2(request.POST, request.FILES)
+
+        if formset2.is_valid():
+            bi=0
+            for califica in range(len(calificacion)):
+                creacion_puntajes2 = Evaluar_Alumnos_Coevaluacion.objects.create(user=User.objects.get(pk=request.user.id),alumno=Alumno.objects.get(pk=lista_integrantes[bi]),grupo=grupo,evaluacion=Evaluacion.objects.get(pk=ide_evaluacion),opinion = (formset2.cleaned_data[bi]).get("opinion"))
+                creacion_puntajes2.save()
+                bi = bi + 1
+    else:
+
+        hola2 = []
+        aux2 = {}
+
+        for b in range(len(calificacion)):
+            aux2 = dict(calificacion=calificacion[b], form = formset2[b])
+            hola2.append(aux2)
+
+    return render (request,'Alumno/evaluaCoevaluacion.html',{'hola':hola,'hola2':hola2,'hola3':hola3,'hola4':hola4,'hola5':hola5,'hola6':hola6,'hola7':hola7,'hola8':hola8,'hola9':hola9,'formset':formset,'formset2':formset2,'formset3':formset3,'formset4':formset4,'formset5':formset5,'formset6':formset6,'formset7':formset7,'formset8':formset8,'formset9':formset9,'usuario':usuario,'hola':hola,'formset':formset,'aspectos':aspectos,'calificacion':calificacion,'alumno':alumno,'integrantes':integrantes,'curso':curso,'nro_grupo':nro_grupo,'evaluacion':evaluacion,'descripcion':descripcion})
+
+

@@ -29,5 +29,7 @@ urlpatterns = [
     path('alumnos/mis-cursos', views.misCursosAlumnos, name='misCursosAlumnos'),
     path('alumnos/mis-cursos/detalle-curso/<int:pk>', views.detalleCursoAlumnos, name='detalleCursoAlumnos'),
     path('alumnos/mis-cursos/detalle-curso/evaluar-compañeros/<slug:pk>/<int:pka>/<int:ide_evaluacion>', views.evaluarCompañeros, name='evaluarCompañeros'),
-    path('alumnos/mis-cursos/detalle-curso/evaluar-compañeros/evalua/<slug:alumnopk>/<int:pka>/<int:ide_evaluacion>/<slug:pk>', views.evalua, name='evalua'),    
+    path('alumnos/mis-cursos/detalle-curso/evaluar-compañeros/evalua/<slug:alumnopk>/<int:pka>/<int:ide_evaluacion>/<slug:pk>', views.evalua, name='evalua'), 
+    path('alumnos/mis-cursos/detalle-curso/mis-resultados/<int:curso>/<int:evaluacion>/<slug:alumno>', views.verResultadosCoevaluacion, name='verResultadosCoevaluacion'),
+    path('alumnos/mis-cursos/detalle-curso/evaluar-compañeros/evalua/<slug:pk>/<int:ide_evaluacion>/<int:pka>', views.evaluaCoevaluacion, name='evaluaCoevaluacion'),      
 ]

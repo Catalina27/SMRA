@@ -65,7 +65,7 @@ class EvaluacionForm(forms.ModelForm):
 			'nombre': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: Índices Autoevaluación'}),
 			'tipo': forms.Select(attrs={'class': 'form-control','placeholder': 'Ej: Test'}),
 			'ponderacion': forms.NumberInput(attrs={'class': 'form-control', 'min':'1', 'max':'100'}),
-			'is_grupal': forms.CheckboxInput(),
+			'is_grupal': forms.NullBooleanSelect(attrs={'class': 'form-control'}),
 		}
 
 

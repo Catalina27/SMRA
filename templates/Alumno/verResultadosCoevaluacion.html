@@ -1,0 +1,118 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+                                             
+<body class="theme-amber">
+<section class="content">
+		<div class="row clearfix">
+    		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        		<div class="card">
+
+                    <div class="header">
+                        <h2><center><b>
+                                MIS CURSOS
+                                <small>Cursos registrados en el sistema</small>
+                        </h2></center></b>
+                    </div>
+
+					<div class="body">
+            			<div class="row clearfix">
+                			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    			<div class="card">
+                        			<div class="header">
+                            			<h2><b>
+                                			DETALLE GENERAL CURSO
+                            			</h2></b>
+                        			</div>
+                        			<div class="body">
+                                        <p>
+                                            Carrera: <b>{{curso.asignatura.carrera.nombre}}</b><br>
+                                            Curso: <b> <i>{{curso.asignatura.sigla}}</i> - {{curso.asignatura.nombre}}</b><br> 
+                                            Evaluacion: <b> <i>%{{evaluacion.ponderacion}} - {{evaluacion.nombre}}</i></b><br>                                          
+                                        </p><br>
+
+                                        <h4><b>
+                                            <center>MIS RESULTADOS</center>
+                                        </h4></b>
+
+                                    <div class="body">
+                                        <div class="body table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="5%">ID</th>
+                                                        <th width="15%">Aspecto</th>    
+                                                        <th width="20%"><center>Puntaje Obtenido</center></th> 
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>1</td>
+                                                        <td>Cumplimiento de tareas asignadas</td>
+                                                        <td><center><b>{{puntajes.0}}</b></center></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>2</td>
+                                                        <td>Participación activa</td>
+                                                        <td><center><b>{{puntajes.1}}</b></center></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>3</td>
+                                                        <td>Organización y distribución de tareas del equipo</td>
+                                                        <td><center><b>{{puntajes.2}}</b></center></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>4</td>
+                                                        <td>Toma en cuenta los puntos de vista de los demás y retroalimenta de forma constructiva </td>
+                                                        <td><center><b>{{puntajes.3}}</b></center></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>5</td>
+                                                        <td>Contribución Participación</td>
+                                                        <td><center><b>{{puntajes.4}}</b></center></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>6</td>
+                                                        <td>Actitud</td>
+                                                        <td><center><b>{{puntajes.5}}</b></center></td>
+                                                    </tr>  
+                                                    <tr>
+                                                        <td>7</td>
+                                                        <td>Responsabilidad</td>
+                                                        <td><center><b>{{puntajes.6}}</b></center></td>
+                                                    </tr>       
+                                                    <tr>
+                                                        <td>8</td>
+                                                        <td>Asistencia y Puntualidad</td>
+                                                        <td><center><b>{{puntajes.7}}</b></center></td>
+                                                    </tr>   
+                                                    <tr>
+                                                        <td>9</td>
+                                                        <td>Resolución de conflictos</td>
+                                                        <td><center><b>{{puntajes.8}}</b></center></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b><i>Total</i></b></td>
+                                                        <td></td>
+                                                        <td><center><b>{{puntaje_total}}</center></b></td>
+                                                    </tr>                                                  
+                                                </tbody>
+
+                                            </table>
+                                            <p><b><i>Ptj. Total: 36 pts.</i></b></p>
+                                        </div>
+                                    </div>
+
+                    			</div>
+               	 			</div>
+            			</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</section>
+</body>
+
+
+
+{% endblock %}

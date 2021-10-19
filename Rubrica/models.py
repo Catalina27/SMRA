@@ -101,10 +101,11 @@ class Descripcion_Aspectos_Coevaluacion(models.Model):
 		return self.nombre
 
 class Califica(models.Model):
+	ponderacion = models.CharField(max_length=20,blank=True, null=True)
 	nombre = models.CharField(max_length=1,blank=True, null=True)
 
 	def __str__(self):
-		return self.nombre
+		return self.ponderacion
 
 class Evaluar_Alumnos_Coevaluacion(models.Model):
 	user = models.ForeignKey(User,blank=True, null=True, on_delete=models.CASCADE)
@@ -112,9 +113,10 @@ class Evaluar_Alumnos_Coevaluacion(models.Model):
 	grupo = models.ForeignKey(Grupos_Alumnos,null=True, blank=True, on_delete=models.CASCADE)
 	evaluacion = models.ForeignKey(Evaluacion, blank=True, null=True, on_delete=models.CASCADE)
 	opinion = models.ForeignKey(Califica,blank=True, null=True,on_delete=models.CASCADE)
+	aspecto = models.ForeignKey(Aspectos_Coevaluacion,blank=True, null=True,on_delete=models.CASCADE)
 
 	def __str__(self):
-		return self.descripcion.nombre
+		return self.opinion.nombre
 
 class Aplicar_Rubrica(models.Model):
 	rubrica = models.ForeignKey(Rubrica, null=True, blank=True, on_delete=models.CASCADE)

@@ -42,13 +42,11 @@
                                                         <td><center>
                                                             {% if estado_grupo %}
                                                             {% for estado_grupo in estado_grupo %}
-                                                            {% if estado_grupo.flag == True %}
                                                                 {% if estado_grupo.grupo.pk == grupos.pk %}
-                                                                <a class="btn btn-success" class="btn btn-success btn-sm"> <i class="material-icons">done_all</i></a>
-                                                            {% else %}
-                                                                <a class="btn btn-warning" class="btn btn-success btn-sm"> <i class="material-icons">warning</i></a>
-                                                            {% endif %}
-                                                            {% endif %}
+                                                                    <a class="btn btn-success" class="btn btn-success btn-sm"> <i class="material-icons">done_all</i></a>
+                                                                {% else %}
+                                                                    <a class="btn btn-warning" class="btn btn-success btn-sm"> <i class="material-icons">warning</i></a>
+                                                                {% endif %}
                                                             {% endfor %}
                                                             {% else %}
                                                             <a class="btn btn-warning" class="btn btn-success btn-sm"> <i class="material-icons">warning</i></a>

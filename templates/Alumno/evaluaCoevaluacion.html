@@ -1,0 +1,544 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+
+<body class="theme-amber">
+<section class="content"><form method="POST">{% csrf_token %}
+		<div class="row clearfix">
+    		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        		<div class="card">
+
+                    <div class="header">
+                        <h2><center><b>
+                                EVALÚA A TUS COMPAÑEROS DE GRUPO
+                                <small>Evalúa a tus compañeros</small>
+                        </h2></center></b>
+                    </div>
+<div class="container">
+    <div class="form-group">
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <div class="{{ message.tags }}" style="height:35px; width:100%; text-align: center" > {{ message }}</div>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+</div>
+
+					<div class="body">
+            			<div class="row clearfix">
+                			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    			<div class="card">
+                        			<div class="header">
+                            			<h2><b>
+                                			DETALLE GENERAL
+                            			</h2></b>
+                        			</div>
+                        			<div class="body">
+                                        <p>
+                                            Carrera: <b>{{curso.asignatura.carrera.nombre}}</b><br>
+                                            Curso: <b> <i>{{curso.asignatura.sigla}}</i> - {{curso.asignatura.nombre}}</b><br>
+                                            Evaluación: <b> <i>{{evaluacion.nombre}}</i> - %{{evaluacion.ponderacion}}</b><br>
+                                            Grupo: <b> {{nro_grupo}} </b><br>                                         
+                                        </p><br>
+
+                                        <h4><b>
+                                            <center>RÚBRICA DE COEVALUACIÓN PARA TRABAJOS EN EQUIPO</center><hr>
+                                        </h4></b>
+
+
+                        			<div class="header">
+                            			<h2><b>
+                                			RÚBRICA - COEVALUACIÓN
+                            			</h2></b>
+                        			</div>
+
+                                    <div class="body">
+                                        <div class="body table-responsive">
+
+
+                                            <!--  ASPECTO NUMERO 1    -->
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="5%" class="bg-cyan">ID</th>
+                                                        <th width="15%" class="bg-cyan">Aspecto</th>
+                                                        {% for calificacion in calificacion %}      
+                                                  	<th class="bg-cyan">
+                                                  		<center>
+                                                            ({{calificacion.id}}) {{calificacion.nombre}}
+                                                  		</center>
+                                                    </th> 
+                                                        {% endfor %}
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>1</td>
+                                                        <td>Cumplimiento de tareas asignadas</td>
+                                                        <td>Cumple las tareas asignadas en los plazos requeridos. La calidad de la tarea supone un notable aporte al equipo. Su trabajo orienta y facilita el del resto de los miembros del equipo.</td>
+                                                        <td>Cumple las tareas asignadas en los plazos requeridos. La calidad de la tarea supone un aporte al equipo.</td>
+                                                        <td>Cumple parcialmente las tareas asignadas y en los plazos requeridos.</td>
+                                                        <td>No cumple las tareas asignadas o no cumple con los plazos requeridos.</td>                               
+                                                </tbody>
+                                            </table><br><br>
+
+                                            <!--  FORM NUMERO 1    -->
+                                            <center><table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="10%">Compañero</th>
+                                                        <th width="30%">Evalúa el Desempeño</th>
+                                                </thead>
+                                                <tbody>
+                                                    
+                                                    
+                                                    
+                                                    <tr>
+                                                        <td>{% for integrantes in integrantes %}<b>{{integrantes.alumno.nombre}} {{integrantes.alumno.apellido_pat}} {{integrantes.alumno.apellido_mat}}</b><br><br><br>{% endfor %}</td>
+                                                        
+                                                        
+                                                        <td>{{ formset.management_form }} {% for a in formset %}
+                                                                {{a.as_p}}<br>
+                                                        {% endfor %}</td>
+                                                    </tr>
+                                                    
+                                                </tbody>
+                                            </table></center><br><br><br>
+                                        
+
+                                            <!--  ASPECTO NUMERO 2    -->
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="5%" class="bg-lime">ID</th>
+                                                        <th width="15%" class="bg-lime">Aspecto</th>
+                                                        {% for calificacion in calificacion %}      
+                                                    <th class="bg-lime">
+                                                        <center>
+                                                            ({{calificacion.id}}) {{calificacion.nombre}}
+                                                        </center>
+                                                    </th> 
+                                                        {% endfor %}
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>2</td>
+                                                        <td>Participación activa</td>
+                                                        <td>Se muestra activo y participativo en los encuentros de grupo. Con sus intervenciones fomenta la participación y mejora la calidad de los resultados del equipo. Sus contribuciones son fundamentales tanto para el proceso grupal como para la calidad del resultado.</td>
+                                                        <td>Se muestra activo y participativo en los encuentros de grupo. Con sus intervenciones fomenta la participación y mejora la calidad de los resultados del equipo.</td>
+                                                        <td>Interviene poco en el debate, principalmente a requerimientos de los demás.</td>
+                                                        <td>Se ausenta con frecuencia y su participación es mínima.</td>
+                                                    </tr>                                                 
+                                                </tbody>
+                                            </table><br><br>
+
+
+                                            <!--  FORM NUMERO 2    -->
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="5%">Compañero</th>
+                                                        <th width="15%">Evalúa el Desempeño</th>
+                                                </thead>
+                                                <tbody>
+                                                    
+                                                    {{ formset2.management_form }}
+                                                    
+                                                    <tr>
+                                                        <td>{% for integrantes in integrantes %}<b>{{integrantes.alumno.nombre}} {{integrantes.alumno.apellido_pat}} {{integrantes.alumno.apellido_mat}}</b><br><br><br>{% endfor %}</td>
+                                                        
+                                                        <td>{% for b in formset2 %}
+                                                        {{b.as_p}}<br>
+                                                       {% endfor %} </td>
+
+                                                    </tr>
+
+                                                </tbody>
+                                            </table><br><br><br>
+
+                                            <!--  ASPECTO NUMERO 3    -->
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="5%" class="bg-light-green">ID</th>
+                                                        <th width="15%" class="bg-light-green">Aspecto</th>
+                                                        {% for calificacion in calificacion %}      
+                                                    <th class="bg-light-green">
+                                                        <center>
+                                                            ({{calificacion.id}}) {{calificacion.nombre}}
+                                                        </center>
+                                                    </th> 
+                                                        {% endfor %}
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>3</td>
+                                                        <td>Organización y distribución de tareas del equipo</td>
+                                                        <td>Participa en la planificación, organización y distribución del trabajo en equipo. Es organizado y distribuye las tareas con eficacia. Fomenta una organización del trabajo aprovechando los recursos de los miembros del equipo.</td>
+                                                        <td>Participa en la planificación, organización y distribución del trabajo en equipo. Es organizado y distribuye las tareas con eficacia.</td>
+                                                        <td>Se limita a aceptar la organización del trabajo propuesta por otros miembros del equipo.</td>
+                                                        <td>Manifiesta resistencias ante la organización del trabajo en el equipo.</td>
+                                                    </tr>                                                 
+                                                </tbody>
+                                            </table><br><br>
+
+                                            <!--  FORM NUMERO 3    -->
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="5%">Compañero</th>
+                                                        <th width="15%">Evalúa el Desempeño</th>
+                                                </thead>
+                                                <tbody>
+                                                    
+                                                    {{ formset3.management_form }}
+                                                    
+                                                    <tr>
+                                                        <td>{% for integrantes in integrantes %}<b>{{integrantes.alumno.nombre}} {{integrantes.alumno.apellido_pat}} {{integrantes.alumno.apellido_mat}}</b><br><br><br>{% endfor %}</td>
+                                                        
+                                                        <td>{% for c in formset3 %}
+                                                        {{c.as_p}}<br>
+                                                       {% endfor %} </td>
+
+                                                    </tr>
+
+                                                </tbody>
+                                            </table><br><br><br>
+
+                                            <!--  ASPECTO NUMERO 4    -->
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="5%" class="bg-orange">ID</th>
+                                                        <th width="15%" class="bg-orange">Aspecto</th>
+                                                        {% for calificacion in calificacion %}      
+                                                    <th class="bg-orange">
+                                                        <center>
+                                                            ({{calificacion.id}}) {{calificacion.nombre}}
+                                                        </center>
+                                                    </th> 
+                                                        {% endfor %}
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>4</td>
+                                                        <td>Toma en cuenta los puntos de vista de los demás y retroalimenta de forma constructiva </td>
+                                                        <td>Acepta las opiniones de los otros y sabe dar su punto de vista en forma constructiva. Fomenta el diálogo constructivo e inspira la participación de calidad de los otros miembros del grupo. Integra las opiniones de los otros en una perspectiva superior, manteniendo un clima de colaboración y apoyo.</td>
+                                                        <td>Acepta las opiniones de los otros y sabe dar su punto de vista en forma constructiva. Fomenta el diálogo constructivo e inspira la participación de calidad de los otros miembros del grupo. </td>
+                                                        <td>Escucha poco, no pregunta, no se preocupa por la opinión de los otros. Sus intervenciones son redundantes y poco sugerentes.</td>
+                                                        <td>No escucha las intervenciones de sus compañeros y las descalifica sistemáticamente. Quiere imponer sus opiniones.</td>
+                                                    </tr>                                                 
+                                                </tbody>
+                                            </table><br><br>
+
+                                            <!--  FORM NUMERO 4    -->
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="5%">Compañero</th>
+                                                        <th width="15%">Evalúa el Desempeño</th>
+                                                </thead>
+                                                <tbody>
+                                                    
+                                                    {{ formset4.management_form }}
+                                                    
+                                                    <tr>
+                                                        <td>{% for integrantes in integrantes %}<b>{{integrantes.alumno.nombre}} {{integrantes.alumno.apellido_pat}} {{integrantes.alumno.apellido_mat}}</b><br><br><br>{% endfor %}</td>
+                                                        
+                                                        <td>{% for d in formset4 %}
+                                                        {{d.as_p}}<br>
+                                                       {% endfor %} </td>
+
+                                                    </tr>
+
+                                                </tbody>                                            </table><br><br><br>
+
+                                            <!--  ASPECTO NUMERO 5    -->
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="5%" class="bg-red">ID</th>
+                                                        <th width="15%" class="bg-red">Aspecto</th>
+                                                        {% for calificacion in calificacion %}      
+                                                    <th class="bg-red">
+                                                        <center>
+                                                            ({{calificacion.id}}) {{calificacion.nombre}}
+                                                        </center>
+                                                    </th> 
+                                                        {% endfor %}
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>5</td>
+                                                        <td>Contribución Participación</td>
+                                                        <td>Siempre ofrece ideas para realizar el trabajo y propone sugerencias para su mejora. Se esfuerza para alcanzar los objetivos del grupo.</td>
+                                                        <td>Ofrece ideas para realizar el trabajo, aunque pocas veces propone sugerencias para su mejora. Se esfuerza para alcanzar los objetivos del grupo.</td>
+                                                        <td>Algunas veces ofrece ideas para realizar el trabajo. Pero nunca propone sugerencias para su mejora. Acepta las propuestas de otros para alcanzar los objetivos del grupo.</td>
+                                                        <td>Nunca ofrece ideas para realizar el trabajo, ni propone sugerencias para su mejora.  En ocasiones dificulta las propuestas de otros para alcanzar los objetivos del grupo.</td>
+                                                    </tr>                                              
+                                                </tbody>
+                                            </table><br><br>
+
+                                            <!--  FORM NUMERO 5    -->
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="5%">Compañero</th>
+                                                        <th width="15%">Evalúa el Desempeño</th>
+                                                </thead>
+                                                <tbody>
+                                                    
+                                                    {{ formset5.management_form }}
+                                                    
+                                                    <tr>
+                                                        <td>{% for integrantes in integrantes %}<b>{{integrantes.alumno.nombre}} {{integrantes.alumno.apellido_pat}} {{integrantes.alumno.apellido_mat}}</b><br><br><br>{% endfor %}</td>
+                                                        
+                                                        <td>{% for e in formset5 %}
+                                                        {{e.as_p}}<br>
+                                                       {% endfor %} </td>
+
+                                                    </tr>
+
+                                                </tbody>
+                                            </table><br><br><br>
+
+                                            <!--  ASPECTO NUMERO 6    -->
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="5%" class="bg-pink">ID</th>
+                                                        <th width="15%" class="bg-pink">Aspecto</th>
+                                                        {% for calificacion in calificacion %}      
+                                                    <th class="bg-pink">
+                                                        <center>
+                                                            ({{calificacion.id}}) {{calificacion.nombre}}
+                                                        </center>
+                                                    </th> 
+                                                        {% endfor %}
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>6</td>
+                                                        <td>Actitud</td>
+                                                        <td>Siempre escucha y comparte las ideas de sus compañeros e intenta integrarlas.  Busca cómo mantener la unión en el grupo.</td>
+                                                        <td>Suele escuchar y compartir las ideas de sus compañeros, pero no ofrece cómo integrarlas. Colabora en mantener la unión en el grupo</td>
+                                                        <td>A veces escucha las ideas de sus compañeros, y acepta integrarlas. No le preocupa la unión en el grupo.</td>
+                                                        <td>Muy pocas veces escucha y comparte las ideas de sus compañeros. No ayuda a mantener la unión en el grupo.</td>
+                                                    </tr>                                                  
+                                                </tbody>
+                                            </table><br><br>
+
+                                            <!--  FORM NUMERO 6    -->
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="5%">Compañero</th>
+                                                        <th width="15%">Evalúa el Desempeño</th>
+                                                </thead>
+                                                <tbody>
+                                                    
+                                                    {{ formset6.management_form }}
+                                                    
+                                                    <tr>
+                                                        <td>{% for integrantes in integrantes %}<b>{{integrantes.alumno.nombre}} {{integrantes.alumno.apellido_pat}} {{integrantes.alumno.apellido_mat}}</b><br><br><br>{% endfor %}</td>
+                                                        
+                                                        <td>{% for f in formset6 %}
+                                                        {{f.as_p}}<br>
+                                                       {% endfor %} </td>
+
+                                                    </tr>
+
+                                                </tbody>
+                                            </table><br><br><br>
+
+                                            <!--  ASPECTO NUMERO 7    -->
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="5%" class="bg-purple">ID</th>
+                                                        <th width="15%" class="bg-purple">Aspecto</th>
+                                                        {% for calificacion in calificacion %}      
+                                                    <th class="bg-purple">
+                                                        <center>
+                                                            ({{calificacion.id}}) {{calificacion.nombre}}
+                                                        </center>
+                                                    </th> 
+                                                        {% endfor %}
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>7</td>
+                                                        <td>Responsabilidad</td>
+                                                        <td>Siempre entrega su trabajo a tiempo y el grupo no tiene que modificar sus fechas o plazos.</td>
+                                                        <td>En ocasiones se retrasa en la entrega de su trabajo, aunque el grupo no tiene que modificar sus fechas o plazos.</td>
+                                                        <td>Muchas veces se retrasa en la entrega de su trabajo, y el grupo tiene que modificar a veces sus fechas o plazos.</td>
+                                                        <td>Nunca entrega su trabajo a tiempo y el grupo debe modificar sus fechas o plazos.</td>
+                                                    </tr>                                                        
+                                                </tbody>
+                                            </table><br><br>
+
+                                            <!--  FORM NUMERO 7    -->
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="5%">Compañero</th>
+                                                        <th width="15%">Evalúa el Desempeño</th>
+                                                </thead>
+                                                <tbody>
+                                                    
+                                                    {{ formset7.management_form }}
+                                                    
+                                                    <tr>
+                                                        <td>{% for integrantes in integrantes %}<b>{{integrantes.alumno.nombre}} {{integrantes.alumno.apellido_pat}} {{integrantes.alumno.apellido_mat}}</b><br><br><br>{% endfor %}</td>
+                                                        
+                                                        <td>{% for g in formset7 %}
+                                                        {{g.as_p}}<br>
+                                                       {% endfor %} </td>
+
+                                                    </tr>
+
+                                                </tbody>
+                                            </table><br><br><br>
+
+                                            <!--  ASPECTO NUMERO 8    -->
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="5%" class="bg-deep-purple">ID</th>
+                                                        <th width="15%" class="bg-deep-purple">Aspecto</th>
+                                                        {% for calificacion in calificacion %}      
+                                                    <th class="bg-deep-purple">
+                                                        <center>
+                                                            ({{calificacion.id}}) {{calificacion.nombre}}
+                                                        </center>
+                                                    </th> 
+                                                        {% endfor %}
+                                                </thead>
+                                                <tbody>      
+                                                    <tr>
+                                                        <td>8</td>
+                                                        <td>Asistencia y Puntualidad</td>
+                                                        <td>Asistió siempre a las reuniones del grupo y fue puntual.</td>
+                                                        <td>Asistió de un 75% a 90% de las reuniones y siempre fue puntual.</td>
+                                                        <td>Asistió de un 61% a 74% de las reuniones y no siempre fue puntual.</td>
+                                                        <td>Asistió como máximo al 60% de las reuniones  y siempre llegó tarde.</td>
+                                                    </tr>                                                   
+                                                </tbody>
+                                            </table><br><br>
+
+                                            <!--  FORM NUMERO 8    -->
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="5%">Compañero</th>
+                                                        <th width="15%">Evalúa el Desempeño</th>
+                                                </thead>
+                                                <tbody>
+                                                    
+                                                    {{ formset8.management_form }}
+                                                    
+                                                    <tr>
+                                                        <td>{% for integrantes in integrantes %}<b>{{integrantes.alumno.nombre}} {{integrantes.alumno.apellido_pat}} {{integrantes.alumno.apellido_mat}}</b><br><br><br>{% endfor %}</td>
+                                                        
+                                                        <td>{% for h in formset8 %}
+                                                        {{h.as_p}}<br>
+                                                       {% endfor %} </td>
+
+                                                    </tr>
+
+                                                </tbody>
+                                            </table><br><br><br>
+
+                                            <!--  ASPECTO NUMERO 9    -->
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="5%" class="bg-teal">ID</th>
+                                                        <th width="15%" class="bg-teal">Aspecto</th>
+                                                        {% for calificacion in calificacion %}      
+                                                    <th class="bg-teal">
+                                                        <center>
+                                                            ({{calificacion.id}}) {{calificacion.nombre}}
+                                                        </center>
+                                                    </th> 
+                                                        {% endfor %}
+                                                </thead>
+                                                <tbody> 
+                                                    <tr>
+                                                        <td>9</td>
+                                                        <td>Resolución de conflictos</td>
+                                                        <td>En situaciones de desacuerdo o conflicto, siempre escucha otras opiniones y acepta sugerencias. Siempre propone alternativas para el consenso o la solución.</td>
+                                                        <td>En situaciones de desacuerdo o conflicto, casi siempre escucha otras opiniones y acepta sugerencias. A veces propone alternativas para el consenso o solución.</td>
+                                                        <td>En situaciones de desacuerdo o conflicto, pocas veces escucha otras opiniones o acepta sugerencias.  No propone alternativas para el consenso, pero los acepta.</td>
+                                                        <td>En situaciones de desacuerdo o conflicto, no escucha otras opiniones o acepta sugerencias. No propone alternativas y le cuesta aceptar el consenso o la solución.</td>
+                                                    </tr>                                                  
+                                                </tbody>
+                                            </table><br><br>
+
+                                            <!--  FORM NUMERO 9    -->
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="5%">Compañero</th>
+                                                        <th width="15%">Evalúa el Desempeño</th>
+                                                </thead>
+                                                <tbody>
+                                                    
+                                                    {{ formset9.management_form }}
+                                                    
+                                                    <tr>
+                                                        <td>{% for integrantes in integrantes %}<b>{{integrantes.alumno.nombre}} {{integrantes.alumno.apellido_pat}} {{integrantes.alumno.apellido_mat}}</b><br><br><br>{% endfor %}</td>
+                                                        
+                                                        <td>{% for i in formset9 %}
+                                                        {{i.as_p}}<br>
+                                                       {% endfor %} </td>
+
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                        <div class="body table-responsive">
+                                            <div class="form-group row">
+                                                <div class="col-sm-10">
+                                                    <right>
+                                                        <a href="" data-toggle="modal" data-target="#submitModal" class="btn bg-light-green"><i class="material-icons">done_all</i> Finalizar</a>
+                                                    </right>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                      <!-- Modal-->
+                                      <div class="modal fade" id="submitModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                          <div class="modal-content">
+                                            <div class="modal-header">
+                                              <h5 class="modal-title" id="exampleModalLabel">¿Deseas confirmar tus respuestas?</h5>
+                                              <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                              </button>
+                                            </div>
+                                            <div class="modal-body">Selecciona el botón <b><i>'Confirmar'</i></b> para terminar la coevaluación</div>
+                                            <div class="modal-footer">
+                                              <button type="submit" class="btn bg-light-green"><i class="material-icons">done_all</i> Confirmar</button>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                        			</div>
+
+                    			</div>
+               	 			</div>
+            			</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</form></section>
+</body>
+
+{% endblock %}

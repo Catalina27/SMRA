@@ -53,8 +53,9 @@ from datetime import date, datetime
 from .models import Rubrica, Topico_rubricas, Topico, Puntaje, Calificacion_aspecto,Aplicar_RubricaGrupo,Aplicar_Rubrica,Evaluar_Alumnos_Coevaluacion
 from .forms import RubricaForm, TopicoForm, PuntajeForm, Topico_rubricasForm, Calificacion_aspecto_Form,Aplicar_RubricaForm,Aplicar_RubricaGrupoForm
 from django.contrib.auth.models import AbstractUser, User
-from Curso.models import Evaluacion, Curso, Asignatura_alumnos, Evaluacion_alumnos, Grupos_Alumnos, Grupos, Validacion_Alumno, Validacion_Grupo
+from Curso.models import Evaluacion, Curso, Asignatura, Asignatura_alumnos, Evaluacion_alumnos, Grupos_Alumnos, Grupos, Validacion_Alumno, Validacion_Grupo
 from Usuario.models import Persona, Alumno
+from Carrera.models import Carrera
 
 from django.forms import formset_factory, modelformset_factory, modelform_factory
 import openpyxl
@@ -159,7 +160,7 @@ def llenarRubrica(request,pk,pka):
 
 	curso = Curso.objects.get(pk=pka)
 	rubrica = Rubrica.objects.get(pk=pk)
-	aspectos = Topico_rubricas.objects.filter(topico__user=current_user.id)
+	aspectos = Topico_rubricas.objects.filter(topico__user=current_user.id,rubrica=pk)
 	return render (request, 'Rubrica/llenarRubrica.html', {'rubrica':rubrica,'aspectos':aspectos,'pk':pk,'usuario':usuario,'pka':pka})
 
 
@@ -177,7 +178,6 @@ def crearAspecto(request,pk,pka):
 	pka = rubrica.curso.pk
 
 	#if Topico.objects.filter(rubrica=pk).count() > 0:
-	#	rubrica = Rubrica.objects.filter(pk=pk).update(estado=3)
 
 	if request.method == "POST":
 		form = Topico_rubricasForm(request.POST)
@@ -286,6 +286,7 @@ def rubricaFinalizada(request,pk,pka):
 
 	aspectos = Topico_rubricas.objects.filter(rubrica=pk)
 	rubrica = Rubrica.objects.get(pk=pk)
+	rubrica_updt = Rubrica.objects.filter(pk=pk).update(estado=3)
 
 	curso = Curso.objects.get(pk=pka)
 	calificacion = Calificacion_aspecto.objects.all()	
@@ -552,17 +553,27 @@ def aplicarRubrica(request,pk,pka):
 	evaluacion = rubrica.evaluacion.pk
 	evaluacion_1 = Evaluacion.objects.get(pk=rubrica.evaluacion.pk)
 	curso = Curso.objects.get(pk=pka)
+	asignatura = Asignatura.objects.get(pk=curso.asignatura.pk)
+	carrera = Carrera.objects.get(pk=asignatura.carrera.pk)
+	print(carrera)
 	alumnos = Asignatura_alumnos.objects.filter(curso=pka)
-	grupos = Grupos.objects.all().order_by('id')
+	grupos = Grupos.objects.filter(asignatura__carrera=carrera).order_by('id')
 	aspectos = Topico_rubricas.objects.filter(rubrica=pk).order_by('id')
 	puntaje_evaluacion = 0
 	evaluado = 0
 	alumno_evaluado = {}
-	estado_alumno = {}
-	estado_grupo = {}
+	estado_alumno = Validacion_Alumno.objects.all()
+	estado_grupo = Validacion_Grupo.objects.all()
 
 	calificacion = Calificacion_aspecto.objects.all().order_by('id')	
 	puntajes = []
+
+	for a in Grupos.objects.all().order_by('id'):
+		grupo_pk = a.pk
+		for b in Validacion_Grupo.objects.filter(grupo=Grupos.objects.get(pk=grupo_pk), evaluacion=Evaluacion.objects.get(pk=rubrica.evaluacion.pk)):
+			grupo_pkk = b.grupo.pk
+			estado_grupo = Validacion_Grupo.objects.filter(grupo=Grupos.objects.get(pk=grupo_pk), evaluacion=Evaluacion.objects.get(pk=rubrica.evaluacion.pk))
+			print('estado_grupo',estado_grupo)
 
 	for aspecto in Topico_rubricas.objects.filter(rubrica=pk):
 		for p in Puntaje.objects.filter(topico=Topico.objects.get(pk=aspecto.topico.pk)).order_by('calificacion'):
@@ -580,12 +591,6 @@ def aplicarRubrica(request,pk,pka):
 		for y in Grupos.objects.all().order_by('id'):
 			grupopk = y.pk
 			puntaje_evaluacion = calculo_puntaje_grupo(grupopk)
-
-	for a in Grupos.objects.all().order_by('id'):
-		grupo_pk = a.pk
-		for b in Validacion_Grupo.objects.filter(grupo=Grupos.objects.get(pk=grupo_pk), evaluacion=Evaluacion.objects.get(pk=rubrica.evaluacion.pk)):
-			grupo_pkk = b.grupo.pk
-			estado_grupo = Validacion_Grupo.objects.filter(grupo=Grupos.objects.get(pk=grupo_pk), evaluacion=Evaluacion.objects.get(pk=rubrica.evaluacion.pk))
 
 	for c in Asignatura_alumnos.objects.filter(curso=pka):
 		alumnopk = c.alumno.pk

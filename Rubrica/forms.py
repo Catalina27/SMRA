@@ -12,7 +12,7 @@ class Evaluar_Alumnos_CoevaluacionForm(forms.ModelForm):
 			'opinion',
 		]
 		labels = {
-			'opinion': 'Seleccione',
+			'opinion': '',
 		}
 		widgets = {
 			'opinion': forms.Select(attrs={'class': 'form-control'}),

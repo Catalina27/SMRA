@@ -32,7 +32,7 @@
                                         </p><br>
 
                                         <h4><b>
-                                            <center>EVALUACIONES DE LA ASIGNATURA</center>
+                                            <center>COEVALUACIONES</center>
                                         </h4></b>
 
                                     <div class="body">
@@ -44,7 +44,6 @@
                                                         <th>Tipo</th>
                                                         <th>% Ponderación</th>
                                                         <th>Carácter</th>
-                                                        <th><center>Rúbrica Asociada</center></th>
                                                         <th><center>Acciones</center></th>
                                                     </tr>
                                                 </thead>
@@ -59,19 +58,9 @@
                                                         
                                                         <td>
                                                             <center>
-                                                            {% if rubrica %}
-                                                                {% for rubrica in rubrica %}
-                                                                    {% if evaluaciones.id == rubrica.evaluacion.id %}
-                                                                        {{rubrica.nombre}} {{evaluaciones.id}}
-                                                                    {% endif %}
-                                                                {% endfor %}
-                                                            {% endif %}
-                                                            </center>
-                                                        </td>
-                                                        <td>
-                                                            <center>
                                                                 {% if evaluaciones.is_grupal == True %}
-                                                                    <a href="{% url 'evaluarCompañeros' alumno.pk pka evaluaciones.pk %}" class="btn btn bg-pink btn-circle waves-effect" title="Evalúa a tus compañeros :D"><i class="material-icons">add</i></a>
+                                                                    <a href="{% url 'evaluarCompañeros' alumno.pk pka evaluaciones.pk %}" class="btn btn bg-deep-purple btn-circle waves-effect" title="Evalúa a tus compañeros :D"><i class="material-icons">add</i></a>
+                                                                    <a href="{% url 'verResultadosCoevaluacion' curso.pk evaluaciones.pk alumno.pk %}" class="btn btn bg-pink btn-circle waves-effect" title="Ve tus resultados :D"><i class="material-icons">search</i></a>
                                                                 {% else %}
                                                                     <a href="" class="btn btn bg-red btn-circle waves-effect" title="Ver detalle de la evaluación"><i class="material-icons">search</i></a>
                                                                 {% endif %}                                  
@@ -85,16 +74,16 @@
                                                     <td><b>{{suma}}</b></td>
                                                     <td></td>
                                                 {% else %}
-                                                    <center><h5><b>¡No hay registros de Evaluaciones en este curso! </b></h5></center>
+                                                    <center><h5><b>¡No hay registros de Evaluaciones para Coevaluar en este curso! </b></h5></center>
                                                 {% endif %}
                                 				</tbody>
                             				</table>
                         				</div>
 
 <br>
-
+ <!--
                                         <h4><b>
-                                            <center>TUS NOTAS DEL CURSO</center>
+                                            <center>MIS RESULTADOS</center>
                                         </h4></b>
 
                                         <div class="body table-responsive">
@@ -129,6 +118,7 @@
                                                 </tbody>
                                             </table>                         
                                         </div>
+-->
                         			</div>
 
                     			</div>

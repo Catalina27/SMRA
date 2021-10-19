@@ -37,7 +37,18 @@
 
 <p>
                                             Grupo: <b>{{grupo.grupo.nombre}}</b><br>
+                                        </p> 
+
+                                        {% if estado_evaluacion %}
+                                        <p align="right">
+                                            <a class="btn bg-light-green" title="Evaluación Completada"><i class="material-icons">done_all</i> EVALUACIÓN COMPLETADA</a>
                                         </p>
+                                        {% else %}
+                                        <p align="right">
+                                            <a class="btn btn-warning" href="{% url 'evaluaCoevaluacion' pk ide_evaluacion pka %}" title="Selecciona para evaluar a tus compañeros :)"><i class="material-icons">warning</i> EVALUACIÓN PENDIENTE</a>
+                                        </p>
+                                        {% endif %}
+
                                         <div class="body table-responsive">
                                             <table class="table table-bordered">
                                                 <thead>
@@ -46,70 +57,15 @@
                                                         <th>Nombre</th>
                                                         <th>Mail</th>
                                                         {% for notas in notas %}<th>Nota {{notas.evaluacion.nombre}}</th>{% endfor %}
-                                                        <th><center>Estado Evaluación</center></th>
-                                                        <th><center>Acciones</center></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                 {% if integrantes %}
                                                 {% for integrantes in integrantes %}
                                                     <tr>
-                                                        <td>{{integrantes.alumno.rut}}</td>
+                                                        <td><b>{{integrantes.alumno.rut}}</b></td>
                                                         <td>{{integrantes.alumno.nombre}} {{integrantes.alumno.apellido_pat}} {{integrantes.alumno.apellido_mat}}</td>
                                                         <td>{{integrantes.alumno.mail}}</td>
-                                                            
-                                                            {% if estado_evaluacion %}
-                                                            {% for estado_evaluacion in estado_evaluacion %}
-                                                        	{% if estado_evaluacion.flag == True %}
-                                                            {% if estado_evaluacion.alumno.pk == integrantes.alumno.pk %}
-                                                        <td>
-                                                            <center>
-                                                                <a class="btn btn bg-light-green btn-circle waves-effect" title="Evaluado :)"><i class="material-icons">done_all</i></a>
-                                                            </center>
-                                                        </td>
-                                                        	{% else %}
-                                                        <td>
-                                                            <center>
-                                                                <a class="btn btn bg-red btn-circle waves-effect" title="Pendiente :o"><i class="material-icons">error</i></a>
-                                                            </center>
-                                                        </td>
-                                                        {% endif %}
-                                                        {% endif %}
-                                                        {% endfor %}
-                                                        {% else %}
-                                                                                                                <td>
-                                                            <center>
-                                                                <a class="btn btn bg-red btn-circle waves-effect" title="Pendiente :o"><i class="material-icons">error</i></a>
-                                                            </center>
-                                                        </td>
-                                                        {% endif %}
-
-                                                            {% if estado_evaluacion %}
-                                                            {% for estado_evaluacion in estado_evaluacion %}
-                                                            {% if estado_evaluacion.flag == True %}
-                                                            {% if estado_evaluacion.alumno.pk == integrantes.alumno.pk %}
-                                                        <td>
-                                                        	<center>
-                                                        		<a class="btn btn-warning" disabled="disabled">Evaluar</a>
-                                                        	<center>
-                                                        </td>
-                                                        {% else %}
-                                                        <td>
-                                                            <center>
-                                                                <a class="btn btn-warning" href="{% url 'evalua' alumno.pk pka ide_evaluacion integrantes.alumno.pk %}">Evaluar</a>
-                                                            <center>
-                                                        </td>
-                                                        {% endif %}
-                                                        {% endif %}
-                                                        {% endfor %}
-                                                        {% else %}
-                                                                                                                <td>
-                                                            <center>
-                                                                <a class="btn btn-warning" href="{% url 'evalua' alumno.pk pka ide_evaluacion integrantes.alumno.pk %}">Evaluar</a>
-                                                            <center>
-                                                        </td>
-                                                        {% endif %}
-                                                    </tr> 
                                                 {% endfor %}
                                                 {% else %}
                                                 <center><h5><b>¡No hay registros de Alumnos inscritos en este curso! </b></h5></center>

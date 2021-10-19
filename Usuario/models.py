@@ -22,6 +22,7 @@ class Persona(models.Model):
 	def __str__(self):
 		return self.user.username + ' - ' + self.user.email 
 
+
 class Alumno(models.Model):
 	carrera = models.ForeignKey(Carrera, null=True, blank=True, on_delete=models.CASCADE)
 	rut = models.CharField(max_length=13, null=False, blank=False, primary_key=True)
